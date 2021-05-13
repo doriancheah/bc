@@ -11,9 +11,12 @@ contract Token {
 	uint256 public totalSupply;
 
 	event Transfer(address indexed from, address indexed to, uint256 value); // indexed allows you to filter when subscribing
-
+	event Approval(address indexed owner, address indexed spender, uint256 value);
 	// track balances
 	mapping(address => uint256) public balanceOf; // public modifier exposes a function that returns a balance
+
+	// track allowances
+	mapping(address => mapping(address => uint256)) public allowance;
 
 	// constructor runs only once on deployment, therefore msg.sender is the deployer.
 	constructor() public {
@@ -22,11 +25,30 @@ contract Token {
 	}
 
 	function transfer(address _to, uint256 _value) public returns (bool success) {
-		require(balanceOf[msg.sender] >= _value);
+		//require(balanceOf[msg.sender] >= _value);		
+		_transfer(msg.sender, _to, _value);
+		return true;
+	}
+
+	function _transfer(address _from, address _to, uint256 _value) internal {
 		require(_to != address(0));
-		balanceOf[msg.sender] = balanceOf[msg.sender].sub(_value);
+		require(balanceOf[_from] >= _value);		
+		balanceOf[_from] = balanceOf[_from].sub(_value);
 		balanceOf[_to] = balanceOf[_to].add(_value);
-		emit Transfer(msg.sender, _to, _value);
+		emit Transfer(_from, _to, _value);
+	}
+
+	function approve(address _spender, uint256 _value) public returns (bool success) {
+		require(_spender != address(0));
+		allowance[msg.sender][_spender] = _value;
+		emit Approval(msg.sender, _spender, _value);
+		return true;
+	}
+
+	function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
+		require(allowance[_from][msg.sender] >= _value);
+		_transfer(_from, _to, _value);
+		allowance[_from][msg.sender] = allowance[_from][msg.sender].sub(_value);
 		return true;
 	}
 }
