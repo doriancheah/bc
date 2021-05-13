@@ -1,5 +1,5 @@
 const Token = artifacts.require('./Token')
-import { tokens } from './helpers'
+import { tokens, EVM_REVERT } from './helpers'
 
 require('chai')
 	.use(require('chai-as-promised'))
@@ -68,13 +68,25 @@ contract('Token', ([deployer, sender, receiver]) => {
 				event.to.toString().should.eq(receiver, 'event.to is correct')
 				event.value.toString().should.eq(amount.toString(), 'event.value is correct')
 			})			
+
+			it('emits a transfer event when transfer value is 0', async () => {
+				const zeroResult = await token.transfer(receiver, tokens(0), { from: deployer })
+				const log = zeroResult.logs[0]
+				log.event.should.eq('Transfer')
+			})			
 		})
 
 		describe('failure', () => {
 			it('throws if insufficient balance in sender account', async () => {
 				let invalidAmount
 				invalidAmount = tokens(1000001)
-				await token.transfer(receiver, invalidAmount, { from: deployer }).should.be.rejectedWith('VM Exception while processing transaction: revert');
+				await token.transfer(receiver, invalidAmount, { from: deployer }).should.be.rejectedWith(EVM_REVERT);
+
+				invalidAmount = tokens(10)
+				await token.transfer(deployer, invalidAmount, { from: receiver }).should.be.rejectedWith(EVM_REVERT);
+			})
+			it('rejects invalid recipient', async () => {
+				await token.transfer(0x0, amount, { from: deployer }).should.be.rejected
 			})
 		})
 	})
