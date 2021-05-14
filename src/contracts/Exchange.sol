@@ -46,7 +46,7 @@ contract Exchange {
 		uint256 amountGet,
 		address tokenGive,
 		uint256 amountGive,
-		uint256 userFill,
+		address userFill,
 		uint256 timestamp	
 	);
 	// STRUCTS ==========================================================================================
@@ -78,7 +78,7 @@ contract Exchange {
 	}
 
 	function withdrawEther(uint256 _amount) public {
-		require(tokens[ETHER][msg.sender] >= _amount);
+		//require(tokens[ETHER][msg.sender] >= _amount);
 		tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
 		msg.sender.transfer(_amount); // here
 		emit Withdrawal(ETHER, msg.sender, _amount, tokens[ETHER][msg.sender]);
@@ -95,7 +95,7 @@ contract Exchange {
 
 	function withdrawToken(address _token, uint256 _amount) public {
 		require(_token != ETHER);
-		require(tokens[_token][msg.sender] >= _amount);
+		//require(tokens[_token][msg.sender] >= _amount);		// SafeMath makes this unnecessary
 		tokens[_token][msg.sender] = tokens[_token][msg.sender].sub(_amount);
 		Token(_token).transfer(msg.sender, _amount);
 		emit Withdrawal(_token, msg.sender, _amount, tokens[_token][msg.sender]);
@@ -125,7 +125,7 @@ contract Exchange {
 		require(_id > 0 && _id <= orderCount);
 		require(!orderFilled[_id]);
 		require(!orderCancelled[_id]);
-		// TODO: make sure both users have sufficient balances
+		// TODO: make sure both users have sufficient balances (NOPE, using SafeMath makes this unneccesary)
 
 		_Order storage _order = orders[_id];
 		_trade(_order.id, _order.user, _order.tokenGet, _order.amountGet, _order.tokenGive, _order.amountGive);
@@ -137,7 +137,6 @@ contract Exchange {
 
 	function _trade(uint256 _orderId, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) internal {
 
-		tradeCount = tradeCount.add(1);
 		// fee based on _amountGet (paid by order filler on top of the amount fulfilled)
 		uint256 _feeAmount = _amountGet.mul(feePercent).div(100); 
 		// debit tokenGet plus fee from order filler's account 
@@ -145,7 +144,7 @@ contract Exchange {
 		// credit tokenGet to order placer's account
 		tokens[_tokenGet][_user] = tokens[_tokenGet][_user].add(_amountGet);
 		// credit FEE in tokenGet to feeAccount
-		tokens[_tokenGet][feeAccount] = tokens[_tokenGet][feeAccount].add(_fee);
+		tokens[_tokenGet][feeAccount] = tokens[_tokenGet][feeAccount].add(_feeAmount);
 		// debit tokenGive from order placer's account
 		tokens[_tokenGive][_user] = tokens[_tokenGive][_user].sub(_amountGive);
 		// credit tokenGive to order filler's account
