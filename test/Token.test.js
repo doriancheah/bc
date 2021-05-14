@@ -1,5 +1,5 @@
 const Token = artifacts.require('./Token')
-import { tokens, EVM_REVERT } from './helpers'
+import { tokens, eventShould, EVM_REVERT } from './helpers'
 
 require('chai')
 	.use(require('chai-as-promised'))
@@ -62,11 +62,11 @@ contract('Token', ([deployer, receiver, exchange]) => {
 
 			it('emits a transfer event', async () => {
 				const log = result.logs[0]
-				log.event.should.eq('Transfer')
-				const event = log.args
-				event.from.toString().should.eq(deployer, 'event.from is correct')
-				event.to.toString().should.eq(receiver, 'event.to is correct')
-				event.value.toString().should.eq(amount.toString(), 'event.value is correct')
+				eventShould(log, 'Transfer', {
+					from: deployer,
+					to: receiver,
+					value: amount
+				})
 			})			
 
 			it('emits a transfer event when transfer value is 0', async () => {
@@ -106,11 +106,11 @@ contract('Token', ([deployer, receiver, exchange]) => {
 			})
 			it('emits an approval event', async () => {
 				const log = result.logs[0]
-				log.event.should.equal('Approval', 'event type is Approval')
-				const event = log.args
-				event.owner.toString().should.equal(deployer.toString(), 'owner is correct')
-				event.spender.toString().should.equal(exchange.toString(), 'spender is correct')
-				event.value.toString().should.equal(amount.toString(), 'amount is correct')
+				eventShould(log, 'Approval', {
+					owner: deployer,
+					spender: exchange,
+					value: amount
+				})
 			})
 		})
 
@@ -121,7 +121,6 @@ contract('Token', ([deployer, receiver, exchange]) => {
 		})
 	})
 
-// transferFrom
 	describe('delegated transfer of tokens', () => {
 		let amount, result
 		beforeEach(async () => {
