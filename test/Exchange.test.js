@@ -203,8 +203,108 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
 		})
 	})
 
+	describe('making orders', () => {
+		let ethAmount, tokenAmount, result
+		ethAmount = ether(1)
+		tokenAmount = tokens(100)
 
+		beforeEach(async () => {
+			result = await exchange.makeOrder(token.address, tokenAmount, ETHER_ADDRESS, ethAmount, { from: user1 })
+		})
 
+		it('tracks newly created order', async () => {
+			const orderCount = await exchange.orderCount()
+			orderCount.toString().should.equal('1')
+			const order = await exchange.orders('1')
+			order.id.toString().should.equal('1')
+			order.user.should.equal(user1)
+			order.tokenGet.should.equal(token.address)
+			order.amountGet.toString().should.equal(tokenAmount.toString())
+			order.tokenGive.should.equal(ETHER_ADDRESS)
+			order.amountGive.toString().should.equal(ethAmount.toString())
+			order.timestamp.toString().length.should.be.at.least(1)
+		})
 
+		it('emits an Order event', async () => {
+			const log = result.logs[0]
+			eventShould(log, 'Order', {
+				id: 1,
+				user: user1,
+				tokenGet: token.address,
+				amountGet: tokenAmount,
+				tokenGive: ETHER_ADDRESS,
+				amountGive: ethAmount,
+				timestamp: () => log.args['timestamp'].toString().length.should.be.at.least(1, 'invalid timestamp')
+			})
+		})
+	})
+
+	describe('order actions', () => {
+		beforeEach(async () => {
+			// deposit ether and make order
+			await exchange.depositEther({ from: user1, value: ether(1) })
+			await exchange.makeOrder(token.address, tokens(1), ETHER_ADDRESS, ether(1), { from: user1 })
+		})
+
+		describe('filling orders', () => {
+			let result
+			describe('success', async () => {
+				// ----------------------------------------------------------- HERE
+			})
+		})
+
+		describe('cancelling orders', () => {
+			let result
+			describe('success', () => {
+				beforeEach(async () => {
+					result = await exchange.cancelOrder(1, { from: user1 })
+				})
+				it('updates cancelled orders', async () => {
+					const orderCancelled = await exchange.orderCancelled(1)
+					orderCancelled.should.equal(true)
+				})
+				it('emits Cancel event', async () => {
+					const log = result.logs[0]
+					eventShould(log, 'Cancel', {
+						id: 1,
+						user: user1,
+						tokenGet: token.address,
+						amountGet: tokens(1),
+						tokenGive: ETHER_ADDRESS,
+						amountGive: ether(1),
+						timestamp: () => log.args['timestamp'].toString().length.should.be.at.least(1, 'invalid timestamp')
+					})
+				})
+			})
+			describe('failure', () => {
+				it('rejects invalid order ids', async () => {
+					await exchange.cancelOrder(2, { from: user1 }).should.be.rejectedWith(EVM_REVERT)
+				})
+				it('rejects unauthorized cancellations', async () => {
+					await exchange.cancelOrder(1, { from: user2 }).should.be.rejectedWith(EVM_REVERT)
+				})
+			})
+		})
+	})
 
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* END */
