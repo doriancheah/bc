@@ -24,15 +24,11 @@ class App extends Component {
     console.log(await token.methods.name().call());*/
   }
 
-  renderTokenName = async () => {
-    window.alert(await this.props.contracts.token.methods.name().call());
-  }
-
   render() {
     return (
       <div>
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-          <a className="navbar-brand" href="/#">{this.renderTokenName()}</a>
+          <a className="navbar-brand" href="/#">asdfsd</a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
