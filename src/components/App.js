@@ -3,6 +3,7 @@ import './App.css';
 import { connect } from 'react-redux';
 //import { loadWeb3, loadAccount, loadToken, loadExchange } from '../store/interactions';
 import { loadWeb3, loadAccount, loadToken, loadExchange } from '../actions';
+import { accountSelector } from '../selectors';
 
 class App extends Component {
   componentDidMount() {
@@ -15,6 +16,7 @@ class App extends Component {
     await this.props.loadAccount();
     await this.props.loadToken();
     await this.props.loadExchange();
+    console.log(await this.props.contracts.token.methods.name().call());
 /*    
     const web3 = loadWeb3(dispatch);
     const networkId = await web3.eth.net.getId();
@@ -24,11 +26,16 @@ class App extends Component {
     console.log(await token.methods.name().call());*/
   }
 
+  test = async () => {
+    window.alert(await this.props.contracts.token.methods.balanceOf('0x95C283d0f15D633C25fc979E79A807AF414d87a5').call());
+  }
+
   render() {
+    console.log('from props', this.props.account);
     return (
       <div>
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-          <a className="navbar-brand" href="/#">asdfsd</a>
+          <a className="navbar-brand" href="/#">{this.props.account}</a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -118,7 +125,7 @@ class App extends Component {
 const mapStateToProps = (state) => {
   return {
     web3: state.web3,
-    account: state.web3.account,
+    account: accountSelector(state),
     contracts: state.contracts
   }
 }
