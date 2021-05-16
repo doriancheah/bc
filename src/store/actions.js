@@ -1,3 +1,6 @@
+
+/* ====== V1
+
 export function web3Loaded(connection) {
 	return {
 		type: 'WEB3_LOADED',
@@ -24,4 +27,4 @@ export function exchangeLoaded(contract) {
 		type: 'EXCHANGE_LOADED',
 		contract
 	}
-}
+} =========  V1 */

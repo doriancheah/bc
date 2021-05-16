@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 
-// WEB3 CONNECT action would instantiate web3 and pass the object in the payload.
 
+
+// WEB3 CONNECT action would instantiate web3 and pass the object in the payload.
+/* =========== V1
 const web3Reducer = (state = {}, action) => {
 	switch (action.type) {
 		case 'WEB3_LOADED':
@@ -37,4 +39,4 @@ const rootReducer = combineReducers({
 });
 
 
-export default rootReducer;
+export default rootReducer;*/
