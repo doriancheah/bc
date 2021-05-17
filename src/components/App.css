@@ -19,6 +19,10 @@
   padding-right: 8px
 }
 
+.content .no-contract {
+  color: white;
+  flex: auto;
+}
 .content > div:first-child {
   min-width: 220px
 }

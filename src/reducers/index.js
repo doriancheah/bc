@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { mapKeys } from 'lodash';
 
 const web3Reducer = (state = {}, action) => {
 	switch (action.type) {
@@ -14,15 +15,29 @@ const web3Reducer = (state = {}, action) => {
 const contractReducer = (state = {}, action) => {
 	switch (action.type) {
 		case 'LOAD_TOKEN':
-			return { ...state, token: action.payload };
+			return { ...state, token: action.payload, tokenLoaded: true };
 		case 'LOAD_EXCHANGE':
-			return { ...state, exchange: action.payload };
+			return { ...state, exchange: action.payload, exchangeLoaded: true };
 		default:
 			return state;		
 	}	
 }
 
+const orderReducer = (state = {}, action) => {
+	switch (action.type) {
+		case 'GET_CANCELLED_ORDERS':
+			return { ...state, cancelledOrders: { loaded: true, data: mapKeys(action.payload, 'id') }};
+		case 'GET_TRADES':
+			return { ...state, filledOrders: { loaded: true, data: action.payload }};
+		case 'GET_ALL_ORDERS':
+			return { ...state, allOrders: { loaded: true, data: mapKeys(action.payload, 'id') }};
+		default:
+			return state;
+	}
+}
+
 export default combineReducers({
 	web3: web3Reducer,
-	contracts: contractReducer
+	contracts: contractReducer,
+	orders: orderReducer
 });

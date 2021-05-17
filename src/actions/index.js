@@ -26,23 +26,59 @@ const _loadContract = async (jsonInterface, getState) => {
 
 	} catch (error) {
 		console.log(error);
-		window.alert('Contract not deployed to current network. Please select another network with Metamask.');
 		return null;
 	}
 }
 
 export const loadToken = () => async (dispatch, getState) => {
 	const token = await _loadContract(Token, getState);
-	dispatch({
-		type: 'LOAD_TOKEN',
-		payload: token
-	});
+	if (token) {
+		dispatch({
+			type: 'LOAD_TOKEN',
+			payload: token
+		});		
+	}
 }
 
 export const loadExchange = () => async (dispatch, getState) => {
 	const exchange = await _loadContract(Exchange, getState);
+	if (exchange) {
+		dispatch({
+			type: 'LOAD_EXCHANGE',
+			payload: exchange
+		});		
+	}
+}
+
+export const getCancelledOrders = () => async (dispatch, getState) => {
+	const cancelStream = await getState().contracts.exchange.getPastEvents('Cancel', { 
+		fromBlock: 0, 
+		toBlock: 'latest' 
+	});
 	dispatch({
-		type: 'LOAD_EXCHANGE',
-		payload: exchange
+		type: 'GET_CANCELLED_ORDERS',
+		payload: cancelStream.map(order => order.returnValues)
+	});
+}
+
+export const getTrades = () => async (dispatch, getState) => {
+	const tradeStream = await getState().contracts.exchange.getPastEvents('Trade', { 
+		fromBlock: 0, 
+		toBlock: 'latest' 
+	});
+	dispatch({
+		type: 'GET_TRADES',
+		payload: tradeStream.map(order => order.returnValues)
+	});
+}
+
+export const getAllOrders = () => async (dispatch, getState) => {
+	const orderStream = await getState().contracts.exchange.getPastEvents('Order', { 
+		fromBlock: 0, 
+		toBlock: 'latest' 
+	});
+	dispatch({
+		type: 'GET_ALL_ORDERS',
+		payload: orderStream.map(order => order.returnValues)
 	});
 }

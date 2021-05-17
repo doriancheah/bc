@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import './App.css';
 import { connect } from 'react-redux';
+import { get } from 'lodash';
+import Navbar from './Navbar';
+import Content from './Content';
+import NoContent from './NoContent';
+import { contractsLoadedSelector } from '../selectors';
+
 //import { loadWeb3, loadAccount, loadToken, loadExchange } from '../store/interactions';
 import { loadWeb3, loadAccount, loadToken, loadExchange } from '../actions';
-import { accountSelector } from '../selectors';
+import { accountSelector, tokenAddressSelector } from '../selectors';
 
 class App extends Component {
   componentDidMount() {
     this.loadBlockchainData();
-    console.log(this.props);
   }
 
   loadBlockchainData = async () => {
@@ -16,7 +21,6 @@ class App extends Component {
     await this.props.loadAccount();
     await this.props.loadToken();
     await this.props.loadExchange();
-    console.log(await this.props.contracts.token.methods.name().call());
 /*    
     const web3 = loadWeb3(dispatch);
     const networkId = await web3.eth.net.getId();
@@ -31,92 +35,10 @@ class App extends Component {
   }
 
   render() {
-    console.log('from props', this.props.account);
     return (
       <div>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-          <a className="navbar-brand" href="/#">{this.props.account}</a>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a className="nav-link" href="/#">Link 1</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/#">Link 2</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/#">Link 3</a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-        <div className="content">
-          <div className="vertical-split">
-            <div className="card bg-dark text-white">
-              <div className="card-header">
-                TItlea
-              </div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="/#" className="card-link">Card link</a>
-              </div>
-            </div>
-            <div className="card bg-dark text-white">
-              <div className="card-header">
-                Card Title
-              </div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="/#" className="card-link">Card link</a>
-              </div>
-            </div>
-          </div>
-          <div className="vertical">
-            <div className="card bg-dark text-white">
-              <div className="card-header">
-                Card Title
-              </div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="/#" className="card-link">Card link</a>
-              </div>
-            </div>
-          </div>
-          <div className="vertical-split">
-            <div className="card bg-dark text-white">
-              <div className="card-header">
-                Card Title
-              </div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="/#" className="card-link">Card link</a>
-              </div>
-            </div>
-            <div className="card bg-dark text-white">
-              <div className="card-header">
-                Card Title
-              </div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="/#" className="card-link">Card link</a>
-              </div>
-            </div>
-          </div>
-          <div className="vertical">
-            <div className="card bg-dark text-white">
-              <div className="card-header">
-                Card Title
-              </div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="/#" className="card-link">Card link</a>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Navbar />
+        { this.props.contractsLoaded ? <Content /> : <NoContent />}
       </div>
     );    
   }
@@ -124,9 +46,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    web3: state.web3,
-    account: accountSelector(state),
-    contracts: state.contracts
+    contractsLoaded: contractsLoadedSelector(state)
   }
 }
 
