@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { filledOrdersLoadedSelector } from '../selectors';
+import { filledOrdersLoaded } from '../selectors';
 import TradeList from './TradeList';
 
 import Spinner from './Spinner';
@@ -23,7 +23,7 @@ class Trades extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		filledOrdersLoaded: filledOrdersLoadedSelector(state),
+		filledOrdersLoaded: filledOrdersLoaded(state),
 	}
 }
 

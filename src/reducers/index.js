@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
-import { mapKeys } from 'lodash';
+//import { mapKeys } from 'lodash';
 
 const web3Reducer = (state = {}, action) => {
 	switch (action.type) {
 		case 'LOAD_WEB3':
 			return { ...state, connection: action.payload };
 		case 'LOAD_ACCOUNT':
+			return { ...state, account: action.payload };
+		case 'SWITCH_ACCOUNT':
 			return { ...state, account: action.payload };
 		default:
 			return state;		
@@ -26,11 +28,18 @@ const contractReducer = (state = {}, action) => {
 const orderReducer = (state = {}, action) => {
 	switch (action.type) {
 		case 'GET_CANCELLED_ORDERS':
-			return { ...state, cancelledOrders: { loaded: true, data: mapKeys(action.payload, 'id') }};
+			return { ...state, cancelledOrders: { loaded: true, data: action.payload }};
 		case 'GET_TRADES':
 			return { ...state, filledOrders: { loaded: true, data: action.payload }};
 		case 'GET_ALL_ORDERS':
-			return { ...state, allOrders: { loaded: true, data: mapKeys(action.payload, 'id') }};
+			return { ...state, allOrders: { loaded: true, data: action.payload }};
+		case 'MAKE_ORDER':
+			return { ...state, 
+								allOrders: { 
+									...state.allOrders,
+									data: [...state.allOrders.data, action.payload]
+								}
+							}
 		default:
 			return state;
 	}

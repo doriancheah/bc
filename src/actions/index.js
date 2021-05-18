@@ -3,7 +3,8 @@ import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json';
 
 export const loadWeb3 = () => dispatch => {
-	const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
+	//const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
+	const web3 = new Web3(window.ethereum);
 	dispatch({
 		type: 'LOAD_WEB3',
 		payload: web3
@@ -21,8 +22,8 @@ export const loadAccount = () => async (dispatch, getState) => {
 const _loadContract = async (jsonInterface, getState) => {
 	try {		
 		const networkId = await getState().web3.connection.eth.net.getId();
-		const contract = getState().web3.connection.eth.Contract;
-		return new contract(jsonInterface.abi, jsonInterface.networks[networkId].address);	
+		const Contract = getState().web3.connection.eth.Contract;
+		return new Contract(jsonInterface.abi, jsonInterface.networks[networkId].address);	
 
 	} catch (error) {
 		console.log(error);

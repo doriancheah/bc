@@ -27,22 +27,33 @@ module.exports = async function(callback) {
 		const exchange = await Exchange.deployed();
 		console.log('Exchange fetched', exchange.address);
 
-		// give some tokens to accounts[1]
-		const sender = accounts[0];
-		const receiver = accounts[1];
+		// give some tokens to accounts
+		const [ user1, user2, user3, user4 ] = accounts;
+
 		let amount = web3.utils.toWei('10000', 'ether');
 
-		await token.transfer(receiver, amount, { from: sender });
-		console.log(`Transferred ${amount} tokens from ${sender} to ${receiver}`);
+		await token.transfer(user2, amount, { from: user1 });
+		console.log(`Transferred ${amount} tokens from ${user1} to ${user2}`);
 
-		// set up exchange users
-		const user1 = accounts[0];
-		const user2 = accounts[1];
+		await token.transfer(user3, amount, { from: user1 });
+		console.log(`Transferred ${amount} tokens from ${user1} to ${user3}`);
 
-		// user1 deposits ether
+		await token.transfer(user4, amount, { from: user1 });
+		console.log(`Transferred ${amount} tokens from ${user1} to ${user4}`);
+
+		// users deposits ether
 		amount = 1;
 		await exchange.depositEther({ from: user1, value: ether(amount) });
 		console.log(`Deposited ${amount} Ether from ${user1}`)
+
+		await exchange.depositEther({ from: user2, value: ether(amount) });
+		console.log(`Deposited ${amount} Ether from ${user2}`)
+
+		await exchange.depositEther({ from: user3, value: ether(amount) });
+		console.log(`Deposited ${amount} Ether from ${user3}`)
+
+		await exchange.depositEther({ from: user4, value: ether(amount) });
+		console.log(`Deposited ${amount} Ether from ${user4}`)
 
 		// user2 approves tokens
 		amount = 10000;
@@ -53,6 +64,14 @@ module.exports = async function(callback) {
 		await exchange.depositToken(token.address, tokens(amount), { from: user2 });
 		console.log(`Deposited ${amount} tokens from ${user2}`);
 
+		// user3 approves tokens
+		amount = 10000;
+		await token.approve(exchange.address, tokens(amount), { from: user3 });
+		console.log(`Approved ${amount} tokens from ${user3}`);
+
+		// user3 deposits tokens
+		await exchange.depositToken(token.address, tokens(amount), { from: user3 });
+		console.log(`Deposited ${amount} tokens from ${user3}`);
 		// seed a cancelled order ---------------------------------------------------
 		//
 
@@ -103,6 +122,28 @@ module.exports = async function(callback) {
 		console.log(`Filled order ${orderId} from ${user2}`);
 
 		await wait(1);
+
+		// user2 MAKES order
+		result = await exchange.makeOrder(token.address, tokens(75), ETHER_ADDRESS, ether(0.025), { from: user2 });
+		console.log(`Made order from ${user2}`);
+		// user3 fills order
+		orderId = result.logs[0].args.id;
+		await exchange.fillOrder(orderId, { from: user3 });
+		console.log(`Filled order ${orderId} from ${user3}`);
+
+		await wait(1);
+
+		// user4 MAKES order
+		result = await exchange.makeOrder(token.address, tokens(120), ETHER_ADDRESS, ether(0.035), { from: user4 });
+		console.log(`Made order from ${user4}`);
+		// user3 fills order
+		orderId = result.logs[0].args.id;
+		await exchange.fillOrder(orderId, { from: user3 });
+		console.log(`Filled order ${orderId} from ${user3}`);
+
+		await wait(1);
+
+
 
 		// SEED OPEN ORDERS -----------------------------------------------------------------
 		//
