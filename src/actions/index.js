@@ -3,8 +3,8 @@ import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json';
 
 export const loadWeb3 = () => dispatch => {
-	//const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
-	const web3 = new Web3(window.ethereum);
+	const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
+	//const web3 = new Web3(window.ethereum);
 	dispatch({
 		type: 'LOAD_WEB3',
 		payload: web3
@@ -83,3 +83,50 @@ export const getAllOrders = () => async (dispatch, getState) => {
 		payload: orderStream.map(order => order.returnValues)
 	});
 }
+
+export const cancelOrder = order => async (dispatch, getState) => {
+	const { exchange } = getState().contracts;
+	const { account } = getState().web3;
+	dispatch({
+		type: 'CANCEL_ORDER',
+		payload: order
+	});	
+	await exchange.methods.cancelOrder(order.id)
+		.send({ from: account })
+		.on('transactionHash', (hash) => {
+			confirmCancelOrder(dispatch, order, exchange);
+		})
+		.on('error', error => {
+			window.alert(error.message);
+			dispatch({
+				type: 'REVERT_ORDER'
+			})
+		});
+}
+
+const confirmCancelOrder = (dispatch, order, exchange) => {
+	exchange.events.Cancel({
+			filter: {id: order.id}
+		},
+			(error, event) => {
+				dispatch({
+					type: 'CONFIRM_CANCEL_ORDER',
+					payload: order
+				})	
+			}
+	)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,10 +6,7 @@ import Navbar from './Navbar';
 import Content from './Content';
 import NoContent from './NoContent';    
 import { contractsLoadedSelector } from '../selectors';
-
-//import { loadWeb3, loadAccount, loadToken, loadExchange } from '../store/interactions';
 import { loadWeb3, loadAccount, loadToken, loadExchange } from '../actions';
-//import { accountSelector, tokenAddressSelector } from '../selectors';
 
 class App extends Component {
   componentDidMount() {

@@ -31,7 +31,7 @@ contract Exchange {
 		uint256 timestamp	
 	);
 	event Cancel(
-		uint256 id,
+		uint256 indexed id,
 		address user,
 		address tokenGet,
 		uint256 amountGet,

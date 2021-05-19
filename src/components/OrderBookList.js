@@ -17,7 +17,6 @@ class OrderBookList extends React.Component {
 	}
 
 	render() {
-		console.log(this.props.orderBook);
 		return (
     	<table className="table table-dark table-sm small">
     		<thead>

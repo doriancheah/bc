@@ -1,9 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Tabs, Tab } from 'react-bootstrap';
-import { myTradesSelector } from '../selectors';
+import { myTradesSelector, myOpenOrdersSelector } from '../selectors';
+import { cancelOrder } from '../actions';
+import Spinner from './Spinner';
 
 class MyTransactions extends React.Component {
+
 	renderMyTrades = (orders) => {
 		return orders.map(order => {
 			return (
@@ -15,8 +18,32 @@ class MyTransactions extends React.Component {
 			);
 		});
 	}	
+
+	cancelOrder = (order) => {
+		this.props.cancelOrder(order);
+	}
+
+	renderMyOrders = (orders) => {
+		if(this.props.eventPending) {
+			return <Spinner type="table" />
+		}
+		return orders.map(order => {
+			return (
+				<tr key={order.id}>
+					<td className={`text-${order.color}`}>{order.tok}</td>
+					<td className={`text-${order.color}`}>{order.tokPrice}</td>					
+					<td 
+						onClick={(e) => this.cancelOrder(order)}
+						className="text-muted cancel-order"
+					>
+						X
+					</td>
+				</tr>
+			);
+		});
+	}	
+
 	render() {
-		console.log(this.props.myTrades)
 		return (
 			<div className="card bg-dark text-white">
 				<div className="card-header">
@@ -47,6 +74,9 @@ class MyTransactions extends React.Component {
 										<th>Cancel</th>
 									</tr>
 								</thead>
+								<tbody>
+									{this.renderMyOrders(this.props.myOrders)}
+								</tbody>
 							</table>
 						</Tab>						
 					</Tabs>
@@ -58,7 +88,9 @@ class MyTransactions extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		myTrades: myTradesSelector(state)
+		myTrades: myTradesSelector(state),
+		myOrders: myOpenOrdersSelector(state),
+		eventPending: state.orders.eventPending
 	};
 }
-export default connect(mapStateToProps)(MyTransactions);
+export default connect(mapStateToProps, { cancelOrder })(MyTransactions);

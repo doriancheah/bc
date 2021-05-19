@@ -7,7 +7,6 @@ import { get } from 'lodash';
 class Navbar extends React.Component {
 
 	render() {
-        console.log('rendering navbar');
 		return (
           <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
             <a className="navbar-brand" href="/#">DoryX</a>
