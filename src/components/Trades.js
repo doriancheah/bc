@@ -11,7 +11,7 @@ class Trades extends React.Component {
 		return (
       <div className="card bg-dark text-white">
         <div className="card-header">
-          TRADES
+          Trades
         </div>
         <div className="card-body">
         	{ this.props.filledOrdersLoaded ? <TradeList /> : <Spinner /> }

@@ -10,10 +10,10 @@ class OrderBook extends React.Component {
 			<div className="vertical">
 	      <div className="card bg-dark text-white">
 	        <div className="card-header">
-	          ORDER BOOK
+	          Order Book
 	        </div>
 	        <div className="card-body order-book">
-	        	{ this.props.orderBookLoaded ? <OrderBookList /> : <Spinner /> }
+	        	{ this.props.orderBookLoaded && !this.props.myEventPending ? <OrderBookList /> : <Spinner /> }
 	        </div>
 	      </div>		
 			</div>
@@ -23,7 +23,8 @@ class OrderBook extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		orderBookLoaded: orderBookLoadedSelector(state)
+		orderBookLoaded: orderBookLoadedSelector(state),
+		myEventPending: state.orders.myEventPending
 	}
 }
 export default connect(mapStateToProps)(OrderBook);

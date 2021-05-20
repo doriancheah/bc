@@ -24,7 +24,7 @@ class MyTransactions extends React.Component {
 	}
 
 	renderMyOrders = (orders) => {
-		if(this.props.eventPending) {
+		if(this.props.myEventPending) {
 			return <Spinner type="table" />
 		}
 		return orders.map(order => {
@@ -90,7 +90,7 @@ const mapStateToProps = (state) => {
 	return {
 		myTrades: myTradesSelector(state),
 		myOrders: myOpenOrdersSelector(state),
-		eventPending: state.orders.eventPending
+		myEventPending: state.orders.myEventPending
 	};
 }
 export default connect(mapStateToProps, { cancelOrder })(MyTransactions);

@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import { orderReducer } from './order';
+import { transferReducer } from './transfer';
 //import { mapKeys } from 'lodash';
 
 const web3Reducer = (state = {}, action) => {
@@ -25,40 +27,21 @@ const contractReducer = (state = {}, action) => {
 	}	
 }
 
-const orderReducer = (state = {}, action) => {
+const balanceReducer = (state = {}, action) => {
 	switch (action.type) {
-		case 'GET_CANCELLED_ORDERS':
-			return { ...state, cancelledOrders: { loaded: true, data: action.payload }};
-		case 'GET_TRADES':
-			return { ...state, filledOrders: { loaded: true, data: action.payload }};
-		case 'GET_ALL_ORDERS':
-			return { ...state, allOrders: { loaded: true, data: action.payload }};
-		case 'CANCEL_ORDER':
-			return { ...state, eventPending: true };
-		case 'CONFIRM_CANCEL_ORDER':
-			return { ...state, 
-				eventPending: false,
-				cancelledOrders: { 
-					loaded: true, 
-					data: [ ...state.cancelledOrders.data, action.payload ]
-				}
-			};
-		case 'REVERT_ORDER':
-			return { ...state, eventPending: false };
-		case 'MAKE_ORDER':
-			return { ...state, 
-				allOrders: { 
-					...state.allOrders,
-					data: [...state.allOrders.data, action.payload]
-				}
-			};
+		case 'GET_BALANCES':
+			return { ...state, ...action.payload };
 		default:
 			return state;
 	}
 }
 
+
+
 export default combineReducers({
 	web3: web3Reducer,
 	contracts: contractReducer,
-	orders: orderReducer
+	balances: balanceReducer,
+	orders: orderReducer,
+	transfers: transferReducer
 });

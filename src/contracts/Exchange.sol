@@ -123,8 +123,8 @@ contract Exchange {
 
 	function fillOrder(uint256 _id) public {
 		require(_id > 0 && _id <= orderCount);
-		require(!orderFilled[_id]);
-		require(!orderCancelled[_id]);
+		require(!orderFilled[_id], 'Order already filled.');
+		require(!orderCancelled[_id], 'Order already cancelled.');
 		// TODO: make sure both users have sufficient balances (NOPE, using SafeMath makes this unneccesary)
 
 		_Order storage _order = orders[_id];

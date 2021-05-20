@@ -156,3 +156,17 @@ td.cancel-order {
 tr.order-book-order {
   cursor: pointer;
 }
+
+.dimmer {
+  background: rgba(0,0,0,.5);
+  width:100%;
+  height:100%;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:999;
+}
+
+.use-pointer {
+  cursor: pointer;
+}

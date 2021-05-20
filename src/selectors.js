@@ -1,19 +1,23 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 import moment from 'moment';
-import { ETHER_ADDRESS, fromWei, formatTime } from './helpers';
-
-const RED = 'danger';
-const GREEN = 'success';
-const BUY = 'buy';
-const SELL = 'sell';
-const PLUS = '+';
-const MINUS = '-';
+import { 
+	ETHER_ADDRESS,
+	BUY,
+	SELL,
+	RED,
+	GREEN,
+	PLUS,
+	MINUS, 
+	fromWei, 
+	formatTime 
+} from './helpers';
 
 // input selectors (non-memoized)
 const account = state => _.get(state, 'web3.account', '0x0');
 const tokenLoaded = state => _.get(state, 'contracts.tokenLoaded', false);
 const exchangeLoaded = state => _.get(state, 'contracts.exchangeLoaded', false);
+const balances = state => state.balances;
 
 export const filledOrdersLoaded = state => _.get(state, 'orders.filledOrders.loaded', false);
 export const cancelledOrdersLoaded = state => _.get(state, 'orders.cancelledOrders.loaded', false);
@@ -26,6 +30,16 @@ const allOrders = state => {
 };
 
 // memoized selectors
+export const balancesSelector = createSelector(balances, bal => {
+	return {
+		walletEtherBal: fromWei(bal.walletEtherBal).toFixed(3),
+		walletTokenBal: fromWei(bal.walletTokenBal).toFixed(2),
+		exchangeEtherBal: fromWei(bal.exchangeEtherBal).toFixed(3),
+		exchangeTokenBal: fromWei(bal.exchangeTokenBal).toFixed(2)
+	}
+})
+
+
 export const contractsLoadedSelector = createSelector(
 	tokenLoaded,
 	exchangeLoaded,
@@ -118,7 +132,9 @@ export const orderBookSelector = createSelector(openOrders, (orders) => {
 );
 
 export const chartDataSelector = createSelector(filledOrders, orders => {
-	const decorated = orders.map(order => decorateOrder(order));
+	const decorated = orders
+		.map(order => decorateOrder(order))
+		.sort((a, b) => b.timestamp - a.timestamp);
 	const grouped = _.groupBy(decorated, order => moment(order.timestamp, 'X').startOf('hour').format());
 	const hours = Object.keys(grouped);
 	const chartData = hours.map(hour => {

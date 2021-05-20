@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json';
+import { ETHER_ADDRESS } from '../helpers';
 
 export const loadWeb3 = () => dispatch => {
 	const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
@@ -84,18 +85,33 @@ export const getAllOrders = () => async (dispatch, getState) => {
 	});
 }
 
+export const fillOrder = order => async (dispatch, getState) => {
+	const { exchange } = getState().contracts;
+	const { account } = getState().web3;
+	dispatch({
+		type: 'FILL_ORDER',
+		payload: order.id
+	});
+	await exchange.methods.fillOrder(order.id)
+		.send({ from: account })
+		.on('error', error => {
+			console.log(error);
+			window.alert(error.message);
+			dispatch({
+				type: 'REVERT_ORDER'
+			});
+		});
+}
+
 export const cancelOrder = order => async (dispatch, getState) => {
 	const { exchange } = getState().contracts;
 	const { account } = getState().web3;
 	dispatch({
 		type: 'CANCEL_ORDER',
-		payload: order
+		payload: order.id
 	});	
 	await exchange.methods.cancelOrder(order.id)
 		.send({ from: account })
-		.on('transactionHash', (hash) => {
-			confirmCancelOrder(dispatch, order, exchange);
-		})
 		.on('error', error => {
 			window.alert(error.message);
 			dispatch({
@@ -104,20 +120,37 @@ export const cancelOrder = order => async (dispatch, getState) => {
 		});
 }
 
-const confirmCancelOrder = (dispatch, order, exchange) => {
-	exchange.events.Cancel({
-			filter: {id: order.id}
-		},
-			(error, event) => {
-				dispatch({
-					type: 'CONFIRM_CANCEL_ORDER',
-					payload: order
-				})	
-			}
-	)
+export const getBalances = () => async (dispatch, getState) => {
+	const { account } = getState().web3;
+	const { eth } = getState().web3.connection;
+	const { token, exchange } = getState().contracts;
+	
+	const walletEtherBal = await eth.getBalance(account);
+	const walletTokenBal = await token.methods.balanceOf(account).call();
+	const exchangeEtherBal = await exchange.methods.balanceOf(ETHER_ADDRESS, account).call();
+	const exchangeTokenBal = await exchange.methods.balanceOf(token.options.address, account).call();
+	dispatch({
+		type: 'GET_BALANCES',
+		payload: {
+			walletEtherBal,
+			walletTokenBal,
+			exchangeEtherBal,
+			exchangeTokenBal
+		}
+	});
+
 }
+/*
+subscribe to Cancel, Order, Trade events in Content componentDidMount.
+event callbacks fire action creators with ORDER_CANCELLED, ORDER_FILLED, ORDER_MADE events. Payload includes event.returnValues
+orderReducer updates state with returnValues, check orderId and if it matches eventPending flag, reset eventPending to false.
 
+cancelOrder - dispatch event with orderId as eventPending flag
 
+UPDATE: use user address for myEventPending for ORDER_FILLED and ORDER_MADE. ORDER_FILLED could be another user filling the same
+order, and ORDER_MADE, we don't have an order ID yet when initiating request.
+
+*/
 
 
 
