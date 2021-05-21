@@ -35,7 +35,8 @@ export const balancesSelector = createSelector(balances, bal => {
 		walletEtherBal: fromWei(bal.walletEtherBal).toFixed(3),
 		walletTokenBal: fromWei(bal.walletTokenBal).toFixed(2),
 		exchangeEtherBal: fromWei(bal.exchangeEtherBal).toFixed(3),
-		exchangeTokenBal: fromWei(bal.exchangeTokenBal).toFixed(2)
+		exchangeTokenBal: fromWei(bal.exchangeTokenBal).toFixed(2),
+		loaded: bal.loaded
 	}
 })
 

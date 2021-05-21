@@ -5,11 +5,11 @@ import { showTransferForm } from '../actions/transfer';
 
 class TransferButton extends React.Component {
 	render() {
-		const { type, token } = this.props;
+		const { type, token, disabled } = this.props;
 		return (
 			<td 
-				className="use-pointer"
-				onClick={() => { this.props.showTransferForm(type, token) }}
+				className={ disabled ? 'text-muted' : 'use-pointer'}
+				onClick={ disabled ? null : () => { this.props.showTransferForm(type, token) }}
 			>
 				{ type === 'withdraw' ? arrowLeft() : arrowRight() }
 			</td>

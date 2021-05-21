@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getCancelledOrders, getTrades, getAllOrders } from '../actions';
+import { getCancelledOrders, getTrades, getAllOrders } from '../actions/order';
 import { subscribeToCancelEvents, subscribeToFillEvents } from '../actions/subscribe';
 import OrderBook from './OrderBook';
 import Trades from './Trades';

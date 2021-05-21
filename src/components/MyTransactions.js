@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Tabs, Tab } from 'react-bootstrap';
 import { myTradesSelector, myOpenOrdersSelector } from '../selectors';
-import { cancelOrder } from '../actions';
+import { cancelOrder } from '../actions/order';
 import Spinner from './Spinner';
 
 class MyTransactions extends React.Component {

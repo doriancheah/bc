@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { orderReducer } from './order';
 import { transferReducer } from './transfer';
+import { reducer as formReducer } from 'redux-form';
 //import { mapKeys } from 'lodash';
 
 const web3Reducer = (state = {}, action) => {
@@ -29,6 +30,8 @@ const contractReducer = (state = {}, action) => {
 
 const balanceReducer = (state = {}, action) => {
 	switch (action.type) {
+		case 'BALANCES_LOADING':
+			return { ...state, loaded: false };
 		case 'GET_BALANCES':
 			return { ...state, ...action.payload };
 		default:
@@ -36,12 +39,11 @@ const balanceReducer = (state = {}, action) => {
 	}
 }
 
-
-
 export default combineReducers({
 	web3: web3Reducer,
 	contracts: contractReducer,
 	balances: balanceReducer,
 	orders: orderReducer,
-	transfers: transferReducer
+	transfers: transferReducer,
+	form: formReducer
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import web3 from 'web3';
 
 export const ETHER_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -13,6 +14,8 @@ export const MINUS = '-';
 const DECIMALS = (10**18);
 
 export const fromWei = amount => amount / DECIMALS;
+
+export const toWei = n => new web3.utils.BN(web3.utils.toWei(n.toString(), 'ether'))
 
 export const formatTime = (timestamp) => moment.unix(timestamp).format('h:mm:ss a M/D');
 

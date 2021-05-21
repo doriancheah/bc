@@ -8,7 +8,7 @@ import { caretUp, caretDown } from '../helpers';
 
 class PriceChart extends React.Component {
 	renderPriceChart = () => {
-		const { chartData } = this.props;
+		//const { chartData } = this.props;
 		return (
 			<div className="price-chart">
 				<div className="price">

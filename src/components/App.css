@@ -170,3 +170,7 @@ tr.order-book-order {
 .use-pointer {
   cursor: pointer;
 }
+
+.my-modal {
+  z-index: 999;
+}

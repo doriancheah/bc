@@ -2,14 +2,14 @@ import React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { orderBookSelector } from '../selectors';
-import { fillOrder } from '../actions';
+import { fillOrder } from '../actions/order';
 import OrderBookHeader from './OrderBookHeader';
 import { BUY, SELL } from '../helpers';
 
 class OrderBookList extends React.Component {
 	renderOrders = (orders, type) => {
 		return orders.map(order => {
-			const fillAction = type === BUY ? 'sell' : 'buy';
+			const fillAction = type;
 			return (
 				<OverlayTrigger
 					key={order.id}
@@ -22,7 +22,7 @@ class OrderBookList extends React.Component {
 				>
 					<tr onClick={(e) => this.props.fillOrder(order)} className="use-pointer">
 		        <td>{order.tok}</td>
-						<td className={`text-${ type === 'buy' ? 'success' : 'danger'}`}>{order.tokPrice}</td>
+						<td className={`text-${ type === BUY ? 'success' : 'danger'}`}>{order.tokPrice}</td>
 						<td>{order.eth}</td>					
 					</tr>
 				</OverlayTrigger>				
@@ -37,9 +37,9 @@ class OrderBookList extends React.Component {
     			<OrderBookHeader />	
     		</thead>
     		<tbody>
-    			{this.renderOrders(this.props.orderBook.sellOrders, 'sell')}
+    			{this.renderOrders(this.props.orderBook.sellOrders, SELL)}
     			<OrderBookHeader />
-					{this.renderOrders(this.props.orderBook.buyOrders, 'buy')}    			
+					{this.renderOrders(this.props.orderBook.buyOrders, BUY)}    			
     		</tbody>
     	</table>		
 		);
