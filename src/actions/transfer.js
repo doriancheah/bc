@@ -1,4 +1,5 @@
 import { toWei } from '../helpers';
+import { getBalances } from './index';
 
 export const showTransferForm = (type, token) => {
 	return {
@@ -34,26 +35,19 @@ const handleError = (error, revertAction, dispatch) => {
 	});
 }
 
-export const depositToken = (amount) => async (dispatch, getState) => {
+export const depositToken = amount => (dispatch, getState) => {
 	const { exchange, token } = getState().contracts;
 	const { account } = getState().web3;
-	dispatch({
-		type: 'DEPOSIT_TOKEN',
-		payload: amount
-	});
-	await token.methods.approve(exchange.options.address, toWei(amount))
+	token.methods.approve(exchange.options.address, toWei(amount))
 		.send({ from: account })
-		.on('transactionHash', async (hash) => {
-			console.log('approved spender', amount)
-			await exchange.methods.depositToken(token.options.address, toWei(amount))
+		.on('transactionHash', hash => {
+			exchange.methods.depositToken(token.options.address, toWei(amount))
 				.send({ from: account })
-				.on('transactionHash', (hash) => {
-					// subscribe to Deposit event
+				.on('transactionHash', hash => {
 					exchange.once('Deposit', {
 						filter: { user: account }
 					}, (error, event) => {
-						console.log('RECEIVED Deposit event', event);
-						dispatch({ type: 'BALANCES_LOADING' })
+						dispatch(getBalances());
 					})
 				})
 				.on('error', error => handleError(error, 'REVERT_TRANSFER', dispatch));	
@@ -61,21 +55,47 @@ export const depositToken = (amount) => async (dispatch, getState) => {
 		.on('error', error => handleError(error, 'REVERT_TRANSFER', dispatch));
 }
 
-export const withdrawToken = (amount) => async (dispatch, getState) => {
+export const withdrawToken = amount => (dispatch, getState) => {
 	const { exchange, token } = getState().contracts;
 	const { account } = getState().web3;
-	console.log('withdrawToken action', amount);
-	dispatch({
-		type: 'WITHDRAW_TOKEN',
-		payload: amount
-	});
-	await exchange.methods.withdrawToken(token.options.address, toWei(amount))
+	exchange.methods.withdrawToken(token.options.address, toWei(amount))
 		.send({ from: account })
-		.on('error', error => {
-			console.log(error);
-			window.alert(error.message);
-			dispatch({
-				type: 'REVERT_TRANSFER'
-			});
-		});
+		.on('transactionHash', hash => {
+			exchange.once('Withdrawal', {
+				filter: { user: account }
+			}, (error, event) => {
+				dispatch(getBalances());
+			})
+		})
+		.on('error', error => handleError(error, 'REVERT_TRANSFER', dispatch));
+}
+
+export const depositEther = amount => (dispatch, getState) => {
+	const { exchange } = getState().contracts;
+	const { account } = getState().web3;
+	exchange.methods.depositEther()
+		.send({ from: account, value: toWei(amount) })
+		.on('transactionHash', hash => {
+			exchange.once('Deposit', {
+				filter: { user: account }
+			}, (error, event) => {
+				dispatch(getBalances())
+			})
+		})
+		.on('error', error => handleError(error, 'REVERT_TRANSFER', dispatch));
+}
+
+export const withdrawEther = amount => (dispatch, getState) => {
+	const { exchange } = getState().contracts;
+	const { account } = getState().web3;
+	exchange.methods.withdrawEther(toWei(amount))
+		.send({ from: account })
+		.on('transactionHash', hash => {
+			exchange.once('Withdrawal', {
+				filter: { user: account }
+			}, (error, event) => {
+				dispatch(getBalances())
+			})
+		})
+		.on('error', error => handleError(error, 'REVERT_TRANSFER', dispatch));	
 }

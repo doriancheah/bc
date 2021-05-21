@@ -5,12 +5,23 @@ import {
 	hideTransferForm, 
 	depositToken,
 	withdrawToken,
+	depositEther,
+	withdrawEther
 } from '../actions/transfer';
 import Modal from './Modal';
 
 const TransferModal = (props) => {
 
-	const { transferType, amount, onDismiss, hideTransferForm, depositToken, withdrawToken } = props;
+	const { 
+		transferType, 
+		amount, 
+		onDismiss, 
+		hideTransferForm, 
+		depositToken, 
+		withdrawToken,
+		depositEther,
+		withdrawEther 
+	} = props;
 	
 	const renderActions = () => {
 		return (
@@ -32,13 +43,11 @@ const TransferModal = (props) => {
 			console.log('call withdrawToken');
 			withdrawToken(amount);
 		}
-		else if(transferType.type === 'withdraw' && transferType.token === 'DORY') {
-			//depositEther(amount);
-			console.log('deposit ether');
+		else if(transferType.type === 'deposit' && transferType.token === 'ETH') {
+			depositEther(amount);
 		}
 		else {
-			//withdrawEther(amount);
-			console.log('withdraw ether');
+			withdrawEther(amount);
 		}
 		onDismiss();
 		hideTransferForm();
@@ -69,6 +78,8 @@ export default connect(mapStateToProps, {
 	hideTransferForm, 
 	depositToken,
 	withdrawToken,
+	depositEther,
+	withdrawEther
 })(TransferModal);
 
 

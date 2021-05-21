@@ -53,7 +53,7 @@ export const loadExchange = () => async (dispatch, getState) => {
 }
 
 export const getBalances = () => async (dispatch, getState) => {
-	dispatch({ type: 'BALANCES_LOADING' });
+	//dispatch({ type: 'BALANCES_LOADING' });
 	const { account } = getState().web3;
 	const { eth } = getState().web3.connection;
 	const { token, exchange } = getState().contracts;

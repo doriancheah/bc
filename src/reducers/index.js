@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { orderReducer } from './order';
 import { transferReducer } from './transfer';
 import { reducer as formReducer } from 'redux-form';
-//import { mapKeys } from 'lodash';
+import _ from 'lodash';
 
 const web3Reducer = (state = {}, action) => {
 	switch (action.type) {
@@ -29,6 +29,7 @@ const contractReducer = (state = {}, action) => {
 }
 
 const balanceReducer = (state = {}, action) => {
+	let walletTokenBal, exchangeTokenBal;
 	switch (action.type) {
 		case 'BALANCES_LOADING':
 			return { ...state, loaded: false };
