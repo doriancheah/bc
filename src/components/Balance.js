@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getBalances } from '../actions';
-import { balancesSelector } from '../selectors';
 import TransferForm from './TransferForm';
 import BalancesTable from './BalancesTable';
 import Spinner from './Spinner';
@@ -19,8 +18,8 @@ class Balance extends React.Component {
           My Balances
         </div>
         <div className="card-body">
-        	{this.props.balances.loaded ? <BalancesTable /> : <Spinner />}
-        	{this.props.showForm ? <TransferForm /> : null}	
+        	{this.props.balancesLoaded ? <BalancesTable /> : <Spinner />}
+        	{this.props.showTransferForm ? <TransferForm /> : null}	
         </div>
       </div>			
 		);
@@ -29,9 +28,8 @@ class Balance extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		form: state.transfers.form,
-		showForm: state.transfers.showForm,
-		balances: balancesSelector(state)
+		showTransferForm: state.forms.showTransferForm,
+		balancesLoaded: state.balances.loaded
 	}
 }
 

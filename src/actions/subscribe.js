@@ -1,4 +1,5 @@
 import { ETHER_ADDRESS } from '../helpers';
+import { getBalances } from './index';
 
 export const subscribeToFillEvents = () => (dispatch, getState) => {
 	const { exchange, token } = getState().contracts;
@@ -16,14 +17,7 @@ export const subscribeToFillEvents = () => (dispatch, getState) => {
 		});
 
 		if(event.returnValues.user === account || event.returnValues.userFill === account) {
-			const { account } = getState().web3;
-			const { exchange } = getState().contracts;
-			const exchangeEtherBal = await exchange.methods.balanceOf(ETHER_ADDRESS, account).call();
-			const exchangeTokenBal = await exchange.methods.balanceOf(token.options.address, account).call();
-			dispatch({
-				type: 'GET_BALANCES',
-				payload: { exchangeEtherBal, exchangeTokenBal}
-			});
+			dispatch(getBalances());
 		}
 	});
 };

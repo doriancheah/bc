@@ -1,3 +1,14 @@
+export const showFillOrderModal = (order) => {
+	return {
+		type: 'SHOW_FILL_ORDER_MODAL',
+		payload: order
+	}
+}
+export const hideFillOrderModal = () => {
+	return {
+		type: 'HIDE_FILL_ORDER_MODAL'
+	}
+}
 export const getCancelledOrders = () => async (dispatch, getState) => {
 	const cancelStream = await getState().contracts.exchange.getPastEvents('Cancel', { 
 		fromBlock: 0, 

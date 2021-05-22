@@ -9,7 +9,7 @@ import {
 	GREEN,
 	PLUS,
 	MINUS, 
-	fromWei, 
+	formatWei, 
 	formatTime 
 } from './helpers';
 
@@ -17,6 +17,7 @@ import {
 const account = state => _.get(state, 'web3.account', '0x0');
 const tokenLoaded = state => _.get(state, 'contracts.tokenLoaded', false);
 const exchangeLoaded = state => _.get(state, 'contracts.exchangeLoaded', false);
+//const balancesLoaded = state => _.get(state, 'balances.loaded', false);
 const balances = state => state.balances;
 
 export const filledOrdersLoaded = state => _.get(state, 'orders.filledOrders.loaded', false);
@@ -32,10 +33,10 @@ const allOrders = state => {
 // memoized selectors
 export const balancesSelector = createSelector(balances, bal => {
 	return {
-		walletEtherBal: fromWei(bal.walletEtherBal).toFixed(3),
-		walletTokenBal: fromWei(bal.walletTokenBal).toFixed(2),
-		exchangeEtherBal: fromWei(bal.exchangeEtherBal).toFixed(3),
-		exchangeTokenBal: fromWei(bal.exchangeTokenBal).toFixed(2),
+		walletEtherBal: formatWei(bal.walletEtherBal),
+		walletTokenBal: formatWei(bal.walletTokenBal),
+		exchangeEtherBal: formatWei(bal.exchangeEtherBal),
+		exchangeTokenBal: formatWei(bal.exchangeTokenBal),
 		loaded: bal.loaded
 	}
 })
@@ -179,8 +180,8 @@ const decorateOrder = (order) => {
 	tokenPrice = (etherAmount / tokenAmount).toFixed(5);
 	return {...order, 
 		orderType,
-		eth: fromWei(etherAmount), 
-		tok: fromWei(tokenAmount),
+		eth: formatWei(etherAmount), 
+		tok: formatWei(tokenAmount),
 		tokPrice: tokenPrice,
 		humanTime: formatTime(order.timestamp)
 	}	

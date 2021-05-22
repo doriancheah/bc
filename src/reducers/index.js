@@ -1,16 +1,13 @@
 import { combineReducers } from 'redux';
 import { orderReducer } from './order';
-import { transferReducer } from './transfer';
+import { formsReducer } from './forms';
 import { reducer as formReducer } from 'redux-form';
-import _ from 'lodash';
 
 const web3Reducer = (state = {}, action) => {
 	switch (action.type) {
 		case 'LOAD_WEB3':
 			return { ...state, connection: action.payload };
 		case 'LOAD_ACCOUNT':
-			return { ...state, account: action.payload };
-		case 'SWITCH_ACCOUNT':
 			return { ...state, account: action.payload };
 		default:
 			return state;		
@@ -29,7 +26,6 @@ const contractReducer = (state = {}, action) => {
 }
 
 const balanceReducer = (state = {}, action) => {
-	let walletTokenBal, exchangeTokenBal;
 	switch (action.type) {
 		case 'BALANCES_LOADING':
 			return { ...state, loaded: false };
@@ -45,6 +41,6 @@ export default combineReducers({
 	contracts: contractReducer,
 	balances: balanceReducer,
 	orders: orderReducer,
-	transfers: transferReducer,
+	forms: formsReducer,
 	form: formReducer
 });

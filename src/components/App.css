@@ -174,3 +174,16 @@ tr.order-book-order {
 .my-modal {
   z-index: 999;
 }
+
+.animate-update {
+  animation: Color 5s linear;
+}
+
+@keyframes Color{
+  0%{
+    color: #28a745;
+  }
+  100%{
+    color: white;
+  }
+}

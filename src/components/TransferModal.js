@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { upperFirst } from 'lodash';
 import { 
@@ -26,8 +26,8 @@ const TransferModal = (props) => {
 	const renderActions = () => {
 		return (
 			<React.Fragment>
-        <button onClick={onDismiss} type="button" className="btn btn-secondary">Cancel</button>
-        <button onClick={doTransfer} type="button" className="btn btn-primary">
+        <button onClick={onDismiss} type="button" className="btn btn-outline-secondary btn-sm">Cancel</button>
+        <button onClick={doTransfer} type="button" className="btn btn-outline-success btn-sm">
         	{upperFirst(transferType.type)}
         </button>				
 			</React.Fragment>
@@ -35,12 +35,10 @@ const TransferModal = (props) => {
 	}
 
 	const doTransfer = () => {
-		console.log(transferType);
 		if(transferType.type === 'deposit' && transferType.token === 'DORY') {
 			depositToken(amount);
 		}
 		else if(transferType.type === 'withdraw' && transferType.token === 'DORY') {
-			console.log('call withdrawToken');
 			withdrawToken(amount);
 		}
 		else if(transferType.type === 'deposit' && transferType.token === 'ETH') {
@@ -69,7 +67,7 @@ const TransferModal = (props) => {
 
 const mapStateToProps = (state) => {
 	return {
-		transferType: state.transfers.form,
+		transferType: state.forms.transferType,
 		amount: state.form.transferForm.values.amount
 	};
 }

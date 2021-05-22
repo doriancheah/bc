@@ -1,46 +1,74 @@
-import React, { Component } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { balancesSelector } from '../selectors';
 import TransferButton from './TransferButton';
 
-class BalancesTable extends Component {
+const BalancesTable = (props) => {
 
-	isZero(amount) {
+	const { walletEtherBal, walletTokenBal, exchangeEtherBal, exchangeTokenBal } = props.balances;
+
+	const walletEtherEl = useRef(null);
+	const exchangeEtherEl = useRef(null);
+	const walletTokenEl = useRef(null);
+	const exchangeTokenEl = useRef(null);
+
+	useEffect(() => {
+		const elements = [
+			walletEtherEl.current,
+			exchangeEtherEl.current,
+			walletTokenEl.current,
+			exchangeTokenEl.current
+		];
+
+		const handleChangeEvent = (e, el) => {
+			el.className = 'animate-update';
+			setTimeout(() => {
+				el.className = '';
+			}, 5000);		
+		}
+		const addChangeHandler = (elem) => {
+			elem.addEventListener('DOMSubtreeModified', (e) => handleChangeEvent(e, elem));
+		}
+		elements.map(el => addChangeHandler(el));
+
+		return () => {
+			elements.map(el => el.removeEventListener('DOMSubtreeModified', handleChangeEvent));
+		}	
+	}, [])
+
+	const isZero = (amount) => {
 		return Number(amount) === 0 ? true : false;
 	}
 
-	render() {
-		const { walletEtherBal, walletTokenBal, exchangeEtherBal, exchangeTokenBal } = this.props.balances;
-		return (
-			<table className="table table-dark table-sm small">
-				<thead>
-					<tr>
-						<th>Asset</th>
-						<th>Wallet</th>
-						<th></th>
-						<th></th>
-						<th>Exchange</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>ETH</td>
-						<td>{ walletEtherBal }</td>
-						<TransferButton type="withdraw" token="ETH" disabled={ this.isZero(exchangeEtherBal) } />
-						<TransferButton type="deposit" token="ETH" disabled={ this.isZero(walletEtherBal) } />
-						<td>{ exchangeEtherBal }</td>
-					</tr>
-					<tr>
-						<td>DORY</td>
-						<td>{ walletTokenBal }</td>
-						<TransferButton type="withdraw" token="DORY" disabled={ this.isZero(exchangeTokenBal) } />
-						<TransferButton type="deposit" token="DORY" disabled={ this.isZero(walletTokenBal) } />
-						<td>{ exchangeTokenBal }</td>
-					</tr>
-				</tbody>
-			</table>			
-		);
-	};
+	return (
+		<table className="table table-dark table-sm small">
+			<thead>
+				<tr>
+					<th>Asset</th>
+					<th>Wallet</th>
+					<th></th>
+					<th></th>
+					<th>Exchange</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>ETH</td>
+					<td ref={walletEtherEl}>{walletEtherBal}</td>
+					<TransferButton type="withdraw" token="ETH" disabled={ isZero(exchangeEtherBal) } />
+					<TransferButton type="deposit" token="ETH" disabled={ isZero(walletEtherBal) } />
+					<td ref={exchangeEtherEl}>{ exchangeEtherBal }</td>
+				</tr>
+				<tr>
+					<td>DORY</td>
+					<td ref={walletTokenEl}>{ walletTokenBal }</td>
+					<TransferButton type="withdraw" token="DORY" disabled={ isZero(exchangeTokenBal) } />
+					<TransferButton type="deposit" token="DORY" disabled={ isZero(walletTokenBal) } />
+					<td ref={exchangeTokenEl}>{ exchangeTokenBal }</td>
+				</tr>
+			</tbody>
+		</table>			
+	);	
 }
 
 const mapStateToProps = (state) => {

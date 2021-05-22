@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import { balancesSelector } from '../selectors'
 import { showTransferModal, dismissTransferModal, hideTransferForm } from '../actions/transfer';
 import TransferModal from './TransferModal';
 
@@ -31,7 +32,7 @@ class TransferForm extends Component {
 	}
 
 	render() {
-		const { type, token } = this.props.transferForm;	
+		const { type, token } = this.props.transferType;	
 		return (
 			<React.Fragment>
 				<form 
@@ -42,7 +43,8 @@ class TransferForm extends Component {
 						name="amount" 
 						component={this.renderInput} 
 						label={`Enter amount of ${token} to ${type}`}
-						placeholder={`Enter ${token} amount`} 
+						placeholder={`Enter ${token} amount`}
+						validate={this.validate} 
 					/>
 					<button className="btn btn-outline-success btn-sm">{type}&nbsp;{token}</button>					
 				</form>
@@ -55,24 +57,37 @@ class TransferForm extends Component {
 	};
 
 	onSubmit = (formValues) => {
-		// send action to show modal
 		this.props.showTransferModal();
-		console.log(formValues);
 	}
+
+	validate = amount => {
+		const { type, token } = this.props.transferType;
+		const { walletEtherBal, walletTokenBal, exchangeEtherBal, exchangeTokenBal } = this.props.balances;
+		if(isNaN(amount) || amount <= 0) {
+			return 'Please enter a valid amount.';
+		}
+		if(type === 'withdraw' && token === 'DORY' && Number(amount) > Number(exchangeTokenBal)) {
+			return 'Withdrawal amount exceeds token balance.'
+		}
+		if(type === 'withdraw' && token === 'ETH' && Number(amount) > Number(exchangeEtherBal)) {
+			return 'Withdrawal amount exceeds ether balance.'
+		}
+		if(type === 'deposit' && token === 'DORY' && Number(amount) > Number(walletTokenBal)) {
+			return 'Deposit amount exceeds wallet token balance.'
+		}
+		if(type === 'deposit' && token === 'ETH' && Number(amount) > Number(walletEtherBal)) {
+			return 'Deposit amount exceeds wallet ether balance.'
+		}
+	}	
 }
 
-const validate = (formValues) => {
-	const errors = {};
-	if (isNaN(formValues.amount) || formValues.amount <= 0) {
-		errors.amount = 'Please enter a valid amount.';
-	}
-	return errors;
-}
+
 
 const mapStateToProps = (state) => {
 	return {
-		transferForm: state.transfers.form,
-		showModal: state.transfers.showModal
+		balances: balancesSelector(state),
+		transferType: state.forms.transferType,
+		showModal: state.forms.showTransferModal
 	};
 }
 
@@ -82,6 +97,5 @@ const wrappedForm = connect(
 )(TransferForm);
 
 export default reduxForm({
-	form: 'transferForm',
-	validate
+	form: 'transferForm'
 })(wrappedForm);

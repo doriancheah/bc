@@ -3,6 +3,12 @@ import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json';
 import { ETHER_ADDRESS } from '../helpers';
 
+export const loadBlockchainData = () => dispatch => {
+	dispatch(loadAccount());
+	dispatch(loadToken());
+	dispatch(loadExchange());
+}
+
 export const loadWeb3 = () => dispatch => {
 	const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
 	//const web3 = new Web3(window.ethereum);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 class NoContent extends React.Component {
 	constructor(props) {
@@ -27,4 +28,10 @@ class NoContent extends React.Component {
 	
 }
 
-export default NoContent;
+const mapStateToProps = (state) => {
+  return {
+    account: state.web3.account
+  }
+}
+
+export default connect(mapStateToProps)(NoContent);

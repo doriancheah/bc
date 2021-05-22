@@ -10,11 +10,17 @@ export const BUY = 'buy';
 export const SELL = 'sell';
 export const PLUS = '+';
 export const MINUS = '-';
+export const FEE_PERCENT = 0.10;
+const PRECISION = 10000;
 
-const DECIMALS = (10**18);
 
-export const fromWei = amount => amount / DECIMALS;
+export const fromWei = n => web3.utils.fromWei(n.toString()); 
+export const formatWei = wei => (Math.round(fromWei(wei) * PRECISION) / PRECISION).toString();
+export const withPrecision = (n, digits) => {
+	const precision = 10 ** (digits - 1);
+	return (Math.round(n * precision) / precision).toString();
 
+}
 export const toWei = n => new web3.utils.BN(web3.utils.toWei(n.toString(), 'ether'))
 
 export const formatTime = (timestamp) => moment.unix(timestamp).format('h:mm:ss a M/D');

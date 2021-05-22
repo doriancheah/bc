@@ -2,14 +2,15 @@ import React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { orderBookSelector } from '../selectors';
-import { fillOrder } from '../actions/order';
+import { showFillOrderModal } from '../actions/order';
 import OrderBookHeader from './OrderBookHeader';
+import FillOrderModal from './FillOrderModal';
 import { BUY, SELL } from '../helpers';
 
 class OrderBookList extends React.Component {
 	renderOrders = (orders, type) => {
 		return orders.map(order => {
-			const fillAction = type;
+			const fillAction = type === BUY ? SELL : BUY;
 			return (
 				<OverlayTrigger
 					key={order.id}
@@ -20,7 +21,7 @@ class OrderBookList extends React.Component {
 						</Tooltip>
 					}
 				>
-					<tr onClick={(e) => this.props.fillOrder(order)} className="use-pointer">
+					<tr onClick={(e) => this.props.showFillOrderModal(order)} className="use-pointer">
 		        <td>{order.tok}</td>
 						<td className={`text-${ type === BUY ? 'success' : 'danger'}`}>{order.tokPrice}</td>
 						<td>{order.eth}</td>					
@@ -32,24 +33,28 @@ class OrderBookList extends React.Component {
 
 	render() {
 		return (
-    	<table className="table table-dark table-sm small">
-    		<thead>
-    			<OrderBookHeader />	
-    		</thead>
-    		<tbody>
-    			{this.renderOrders(this.props.orderBook.sellOrders, SELL)}
-    			<OrderBookHeader />
-					{this.renderOrders(this.props.orderBook.buyOrders, BUY)}    			
-    		</tbody>
-    	</table>		
+			<React.Fragment>
+	    	<table className="table table-dark table-sm small">
+	    		<thead>
+	    			<OrderBookHeader />	
+	    		</thead>
+	    		<tbody>
+	    			{this.renderOrders(this.props.orderBook.sellOrders, SELL)}
+	    			<OrderBookHeader />
+						{this.renderOrders(this.props.orderBook.buyOrders, BUY)}    			
+	    		</tbody>
+	    	</table>	
+	    	{ this.props.showModal ? <FillOrderModal /> : null }					
+			</React.Fragment>
 		);
 	}
 }
 
 const mapStateToProps = (state) => {
 	return {
-		orderBook: orderBookSelector(state)
+		orderBook: orderBookSelector(state),
+		showModal: state.forms.showFillOrderModal
 	}
 }
 
-export default connect(mapStateToProps, { fillOrder })(OrderBookList);
+export default connect(mapStateToProps, { showFillOrderModal })(OrderBookList);
