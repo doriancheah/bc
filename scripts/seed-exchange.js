@@ -161,6 +161,24 @@ module.exports = async function(callback) {
 			// wait 1 second
 			await wait(1);
 		}
+
+		await exchange.makeOrder(ETHER_ADDRESS, ether(0.0325), token.address, tokens(200), { from: user3 });
+		await wait(1);
+		await exchange.makeOrder(ETHER_ADDRESS, ether(0.0275), token.address, tokens(100), { from: user3 });
+		await wait(1);
+		await exchange.makeOrder(ETHER_ADDRESS, ether(0.0415), token.address, tokens(300), { from: user3 });
+		await wait(1);
+		await exchange.makeOrder(ETHER_ADDRESS, ether(0.0190), token.address, tokens(400), { from: user3 });
+		await wait(1);
+		await exchange.makeOrder(token.address, tokens(200), ETHER_ADDRESS, ether(0.0195), { from: user4 });
+		await wait(1);
+		await exchange.makeOrder(token.address, tokens(200), ETHER_ADDRESS, ether(0.0215), { from: user4 });
+		await wait(1);
+		await exchange.makeOrder(token.address, tokens(200), ETHER_ADDRESS, ether(0.0235), { from: user4 });
+		await wait(1);
+		await exchange.makeOrder(token.address, tokens(200), ETHER_ADDRESS, ether(0.0380), { from: user4 });
+		await wait(1);
+
 	} catch(error) {
 		console.log(error);
 	}

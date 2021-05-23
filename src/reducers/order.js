@@ -9,6 +9,8 @@ export const orderReducer = (state = {}, action) => {
 			return { ...state, allOrders: { loaded: true, data: action.payload }};
 		case 'FILL_ORDER':
 			return { ...state, myEventPending: action.payload };
+		case 'CANCEL_ORDER':
+			return { ...state, myEventPending: action.payload };
 		case 'ORDER_FILLED':
 			myEventPending = action.payload.id === state.myEventPending ? false : state.myEventPending;
 			return { ...state,
@@ -18,13 +20,17 @@ export const orderReducer = (state = {}, action) => {
 					data: [ ...state.filledOrders.data, action.payload ]	
 				}
 			};			
-		case 'CANCEL_ORDER':
-			return { ...state, myEventPending: action.payload };
+		case 'ORDER_MADE':
+			return { ...state, 
+				allOrders: { 
+					...state.allOrders,
+					data: [...state.allOrders.data, action.payload]
+				}
+			};
 		case 'ORDER_CANCELLED':
-			// if user-initiated cancellation is pending and this cancel event is the 
-			// result of a different cancellation, leave the myEventPending flag intact.
-			// if it's the result of our cancellation, set the flag to false to remove 
-			// spinner from MyTransaction component
+			// TO DO: use account address as myEventPending, because...
+			// REALLY what we need to do is check if the event returnValues contain a user matching this account
+			// because a matching order Id in the case of ORDER_FILLED doesn't mean it's our event
 			myEventPending = action.payload.id === state.myEventPending ? false : state.myEventPending;
 			return { ...state,
 				myEventPending,
@@ -35,13 +41,6 @@ export const orderReducer = (state = {}, action) => {
 			};
 		case 'REVERT_ORDER':
 			return { ...state, myEventPending: false };
-		case 'MAKE_ORDER':
-			return { ...state, 
-				allOrders: { 
-					...state.allOrders,
-					data: [...state.allOrders.data, action.payload]
-				}
-			};
 		default:
 			return state;
 	}

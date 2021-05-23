@@ -17,7 +17,6 @@ import {
 const account = state => _.get(state, 'web3.account', '0x0');
 const tokenLoaded = state => _.get(state, 'contracts.tokenLoaded', false);
 const exchangeLoaded = state => _.get(state, 'contracts.exchangeLoaded', false);
-//const balancesLoaded = state => _.get(state, 'balances.loaded', false);
 const balances = state => state.balances;
 
 export const filledOrdersLoaded = state => _.get(state, 'orders.filledOrders.loaded', false);
@@ -31,6 +30,7 @@ const allOrders = state => {
 };
 
 // memoized selectors
+
 export const balancesSelector = createSelector(balances, bal => {
 	return {
 		walletEtherBal: formatWei(bal.walletEtherBal),

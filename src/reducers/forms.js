@@ -11,6 +11,10 @@ formsReducer
 
 export const formsReducer = (state = { showTransferForm: false }, action) => {
 	switch (action.type) {
+		case 'SHOW_NEW_ORDER_MODAL':
+			return { ...state, showNewOrderModal: true, newOrder: action.payload };
+		case 'HIDE_NEW_ORDER_MODAL':
+			return { ...state, showNewOrderModal: false, newOrder: {} };
 		case 'SHOW_TRANSFER_FORM':
 			return { ...state, showTransferForm: true, transferType: { type: action.payload.type, token: action.payload.token }};
 		case 'HIDE_TRANSFER_FORM':
@@ -22,7 +26,11 @@ export const formsReducer = (state = { showTransferForm: false }, action) => {
 		case 'SHOW_FILL_ORDER_MODAL':
 			return { ...state, showFillOrderModal: true, orderToFill: action.payload };
 		case 'HIDE_FILL_ORDER_MODAL':
-			return { ...state, showFillOrderModal: false, orderToFill: {} }
+			return { ...state, showFillOrderModal: false, orderToFill: {} };
+		case 'SHOW_CANCEL_ORDER_MODAL':
+			return { ...state, showCancelOrderModal: true, orderToCancel: action.payload };
+		case 'HIDE_CANCEL_ORDER_MODAL':
+			return { ...state, showCancelOrderModal: false, orderToCancel: {} };
 		default:
 			return state;
 	}

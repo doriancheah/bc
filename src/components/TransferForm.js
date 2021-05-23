@@ -24,7 +24,6 @@ class TransferForm extends Component {
 					{...input} 
 					className={`form-control ${meta.error && meta.touched ? 'is-invalid' : ''}`} 
 					autoComplete="off" 
-					onClick={(e) => e.stopPropagation()}
 				/>
 				{this.renderError(meta)}
 			</div>

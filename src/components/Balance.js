@@ -7,7 +7,7 @@ import Spinner from './Spinner';
 
 class Balance extends React.Component {
 	componentDidMount() {
-		this.props.getBalances();
+		//this.props.getBalances();
 	}
 
 	render() {

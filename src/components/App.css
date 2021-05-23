@@ -14,6 +14,21 @@
   z-index: 1
 }
 
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+/*    -webkit-box-shadow: inset 0 0 6px rgba(200,200,200,1);
+*/    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #808080;
+    -webkit-box-shadow: inset 0 0 6px rgba(90,90,90,0.7);
+}
+
 .content > div {
   width: 20%;
   padding-right: 8px
@@ -186,4 +201,12 @@ tr.order-book-order {
   100%{
     color: white;
   }
+}
+
+.spinner-parent {
+  padding: 20px;
+}
+
+.spinner-child {
+  margin: auto;
 }
