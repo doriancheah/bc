@@ -91,6 +91,11 @@ export const makeOrder = newOrder => (dispatch, getState) => {
 	}
 	exchange.methods.makeOrder(tokenGet, amountGet, tokenGive, amountGive)
 		.send({ from: account })
+		.on('transactionHash', hash => {
+			dispatch({
+				type: 'MAKING_ORDER'
+			});
+		})
 		.on('error', error => handleError(error, dispatch));
 }
 
@@ -100,26 +105,30 @@ const handleError = (error, dispatch) => {
 	dispatch({ type: 'REVERT_ORDER' });
 }
 
-export const fillOrder = order => async (dispatch, getState) => {
+export const fillOrder = order => (dispatch, getState) => {
 	const { exchange } = getState().contracts;
 	const { account } = getState().web3;
-	dispatch({
-		type: 'FILL_ORDER',
-		payload: order.id
-	});
-	await exchange.methods.fillOrder(order.id)
+	exchange.methods.fillOrder(order.id)
 		.send({ from: account })
+		.on('transactionHash', hash => {
+			dispatch({
+				type: 'FILLING_ORDER',
+				payload: order.id
+			});					
+		})
 		.on('error', error => handleError(error, dispatch));
 }
 
 export const cancelOrder = order => async (dispatch, getState) => {
 	const { exchange } = getState().contracts;
 	const { account } = getState().web3;
-	dispatch({
-		type: 'CANCEL_ORDER',
-		payload: order.id
-	});	
 	await exchange.methods.cancelOrder(order.id)
 		.send({ from: account })
+		.on('transactionHash', hash => {
+			dispatch({
+				type: 'CANCELLING_ORDER',
+				payload: order.id
+			});				
+		})
 		.on('error', error => handleError(error, dispatch));
 }

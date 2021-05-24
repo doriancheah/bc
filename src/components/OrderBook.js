@@ -13,7 +13,7 @@ class OrderBook extends React.Component {
 	          Order Book
 	        </div>
 	        <div className="card-body order-book">
-	        	{ this.props.orderBookLoaded && !this.props.myEventPending ? <OrderBookList /> : <Spinner /> }
+	        	{ this.props.orderBookLoaded ? <OrderBookList /> : <Spinner /> }
 	        </div>
 	      </div>		
 			</div>

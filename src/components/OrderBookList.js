@@ -11,24 +11,43 @@ class OrderBookList extends React.Component {
 	renderOrders = (orders, type) => {
 		return orders.map(order => {
 			const fillAction = type === BUY ? SELL : BUY;
+			const tooltipText = order.pending ?
+				'Pending' :
+				`Click to ${fillAction} ${order.tok} DORY @ ${order.tokPrice}`;
 			return (
 				<OverlayTrigger
 					key={order.id}
 					placement="auto"
 					overlay={
 						<Tooltip id={order.id}>
-							{`${order.id}: Click to ${fillAction} ${order.tok} DORY @ ${order.tokPrice}`}
+							{tooltipText}
 						</Tooltip>
 					}
 				>
-					<tr onClick={(e) => this.props.showFillOrderModal(order)} className="use-pointer">
-		        <td>{order.tok}</td>
-						<td className={`text-${ type === BUY ? 'success' : 'danger'}`}>{order.tokPrice}</td>
-						<td>{order.eth}</td>					
-					</tr>
+					{this.renderRow(order, type)}
 				</OverlayTrigger>				
 			);
 		});
+	}
+
+	renderRow = (order, type) => {
+		if(order.pending) {
+			return (
+				<tr className="text-muted">
+	        <td>{order.tok}</td>
+					<td>{order.tokPrice}</td>
+					<td>{order.eth}</td>					
+				</tr>										
+			);	
+		} else {
+			return (
+				<tr onClick={(e) => this.props.showFillOrderModal(order)} className="use-pointer">
+	        <td>{order.tok} {order.pending ? 'PENDING' : null}</td>
+					<td className={`text-${ type === BUY ? 'success' : 'danger'}`}>{order.tokPrice}</td>
+					<td>{order.eth}</td>					
+				</tr>					
+			);
+		}
 	}
 
 	render() {

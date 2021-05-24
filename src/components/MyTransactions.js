@@ -19,7 +19,7 @@ const MyTransactions = (props) => {
 						<MyTrades />						
 					</Tab>
 					<Tab eventKey="orders" title="Orders">
-						{props.myEventPending ? <Spinner /> : <MyOrders />}
+						<MyOrders />
 					</Tab>						
 				</Tabs>
 			</div>

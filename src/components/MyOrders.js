@@ -11,17 +11,27 @@ const MyOrders = (props) => {
 			return (
 				<tr key={order.id}>
 					<td className={`text-${order.color}`}>{order.tok}</td>
-					<td className={`text-${order.color}`}>{order.tokPrice}</td>					
-					<td 
-						onClick={(e) => props.showCancelOrderModal(order)}
-						className="text-muted cancel-order"
-					>
-						X
-					</td>
+					<td className={`text-${order.color}`}>{order.tokPrice}</td>		
+					{renderCancelButton(order)}			
 				</tr>
 			);
 		});
 	}	
+
+	const renderCancelButton = (order) => {
+		if(order.pending) {
+			return <td className="text-muted">PENDING</td>
+		} else {
+			return (
+				<td 
+					onClick={(e) => props.showCancelOrderModal(order)}
+					className="text-muted use-pointer"
+				>
+					X {order.pending ? 'pending' : null}
+				</td>
+			);
+		}
+	}
 
 	return (
 		<React.Fragment>

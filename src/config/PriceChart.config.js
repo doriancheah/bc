@@ -18,7 +18,7 @@ export const chartOptions = {
 		},
 		y: {
 			show: true,
-			title: 'price'
+			title: 'price',
 		},
 		marker: {
 			show: true
@@ -57,7 +57,10 @@ export const chartOptions = {
 			offsetX: 0,
 			offsetY: 0,
 			rotate: 0
-		}
+		},
+    min: 0,
+    max: 0.001,
+    forceNiceScale: true
 	}
 }
 

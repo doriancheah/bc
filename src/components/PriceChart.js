@@ -8,7 +8,8 @@ import { caretUp, caretDown } from '../helpers';
 
 class PriceChart extends React.Component {
 	renderPriceChart = () => {
-		//const { chartData } = this.props;
+		const { chartData } = this.props;
+		console.log(chartData);
 		return (
 			<div className="price-chart">
 				<div className="price">
@@ -16,7 +17,7 @@ class PriceChart extends React.Component {
 				</div>
 				<Chart 
 					options={chartOptions}
-					series={[{ data: dummyData }]}
+					series={[{ data: chartData }]}
 					type="candlestick"
 					width="100%"
 					height="100%"

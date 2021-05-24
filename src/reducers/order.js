@@ -1,3 +1,14 @@
+import { find, indexOf } from 'lodash';
+
+const updateOrdersWithPending = (orders, id) => {
+	const order = find(orders, o => o.id === id);
+	const pendingOrder = {...order, pending: true}; // copy object
+	const index = indexOf(orders, order);
+	const ordersWithPending = [...orders]; // copy array
+	ordersWithPending.splice(index, 1, pendingOrder); // splice in edited object
+	return ordersWithPending;
+}
+
 export const orderReducer = (state = {}, action) => {
 		let myEventPending;
 	switch (action.type) {
@@ -7,33 +18,48 @@ export const orderReducer = (state = {}, action) => {
 			return { ...state, filledOrders: { loaded: true, data: action.payload }};
 		case 'GET_ALL_ORDERS':
 			return { ...state, allOrders: { loaded: true, data: action.payload }};
-		case 'FILL_ORDER':
-			return { ...state, myEventPending: action.payload };
-		case 'CANCEL_ORDER':
-			return { ...state, myEventPending: action.payload };
+		case 'FILLING_ORDER':
+			// add pending:true to order object
+			return { 
+				...state, 
+				allOrders: { 
+					loaded: true, 
+					data: updateOrdersWithPending(state.allOrders.data, action.payload)
+				}
+			};
+		case 'CANCELLING_ORDER':
+			// add pending:true to order object
+			return { 
+				...state, 
+				allOrders: { 
+					loaded: true, 
+					data: updateOrdersWithPending(state.allOrders.data, action.payload)
+				}
+			};
+		case 'MAKING_ORDER':
+			return { ...state, makingOrder: true }
 		case 'ORDER_FILLED':
-			myEventPending = action.payload.id === state.myEventPending ? false : state.myEventPending;
-			return { ...state,
-				myEventPending,
+			return { 
+				...state,
 				filledOrders: {
 					loaded: true,
 					data: [ ...state.filledOrders.data, action.payload ]	
 				}
 			};			
 		case 'ORDER_MADE':
-			return { ...state, 
+			return { 
+				...state, 
 				allOrders: { 
 					...state.allOrders,
 					data: [...state.allOrders.data, action.payload]
 				}
 			};
+		case 'MY_ORDER_MADE':
+			return { ...state, makingOrder: false }
+			
 		case 'ORDER_CANCELLED':
-			// TO DO: use account address as myEventPending, because...
-			// REALLY what we need to do is check if the event returnValues contain a user matching this account
-			// because a matching order Id in the case of ORDER_FILLED doesn't mean it's our event
-			myEventPending = action.payload.id === state.myEventPending ? false : state.myEventPending;
-			return { ...state,
-				myEventPending,
+			return { 
+				...state,
 				cancelledOrders: {
 					loaded: true,
 					data: [ ...state.cancelledOrders.data, action.payload ]	
