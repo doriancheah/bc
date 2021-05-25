@@ -45,12 +45,12 @@ export const depositToken = amount => (dispatch, getState) => {
 				.send({ from: account })
 				.on('transactionHash', hash => {
 					// after contract call and before subscribe...
-					dispatch({ type: 'TRANSFER_PENDING'})
+					dispatch({ type: 'TRANSFER_PENDING' });
 					exchange.once('Deposit', {
 						filter: { user: account }
 					}, (error, event) => {
 						dispatch(getBalances());
-						dispatch({ type: 'TRANSFER_COMPLETE'})
+						dispatch({ type: 'TRANSFER_COMPLETE' });
 					})
 				})
 				.on('error', error => handleError(error, 'REVERT_TRANSFER', dispatch));	
@@ -64,10 +64,12 @@ export const withdrawToken = amount => (dispatch, getState) => {
 	exchange.methods.withdrawToken(token.options.address, toWei(amount))
 		.send({ from: account })
 		.on('transactionHash', hash => {
+			dispatch({ type: 'TRANSFER_PENDING' });
 			exchange.once('Withdrawal', {
 				filter: { user: account }
 			}, (error, event) => {
 				dispatch(getBalances());
+				dispatch({ type: 'TRANSFER_COMPLETE' });
 			})
 		})
 		.on('error', error => handleError(error, 'REVERT_TRANSFER', dispatch));
@@ -79,10 +81,12 @@ export const depositEther = amount => (dispatch, getState) => {
 	exchange.methods.depositEther()
 		.send({ from: account, value: toWei(amount) })
 		.on('transactionHash', hash => {
+			dispatch({ type: 'TRANSFER_PENDING' });
 			exchange.once('Deposit', {
 				filter: { user: account }
 			}, (error, event) => {
 				dispatch(getBalances())
+				dispatch({ type: 'TRANSFER_COMPLETE' });
 			})
 		})
 		.on('error', error => handleError(error, 'REVERT_TRANSFER', dispatch));
@@ -94,10 +98,12 @@ export const withdrawEther = amount => (dispatch, getState) => {
 	exchange.methods.withdrawEther(toWei(amount))
 		.send({ from: account })
 		.on('transactionHash', hash => {
+			dispatch({ type: 'TRANSFER_PENDING' });
 			exchange.once('Withdrawal', {
 				filter: { user: account }
 			}, (error, event) => {
-				dispatch(getBalances())
+				dispatch(getBalances());
+				dispatch({ type: 'TRANSFER_COMPLETE'} );
 			})
 		})
 		.on('error', error => handleError(error, 'REVERT_TRANSFER', dispatch));	
