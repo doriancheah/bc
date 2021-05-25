@@ -10,8 +10,8 @@ export const loadBlockchainData = () => dispatch => {
 }
 
 export const loadWeb3 = () => dispatch => {
-	const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
-	//const web3 = new Web3(window.ethereum);
+	//const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
+	const web3 = new Web3(window.ethereum);
 	dispatch({
 		type: 'LOAD_WEB3',
 		payload: web3
