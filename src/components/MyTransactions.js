@@ -1,12 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Tabs, Tab } from 'react-bootstrap';
 
 import MyTrades from './MyTrades';
 import MyOrders from './MyOrders';
-import Spinner from './Spinner';
 
-const MyTransactions = (props) => {
+const MyTransactions = () => {
 
 	return (
 		<div className="card bg-dark text-white">
@@ -27,9 +25,4 @@ const MyTransactions = (props) => {
 	);
 }
 
-const mapStateToProps = (state) => {
-	return {
-		myEventPending: state.orders.myEventPending,
-	};
-}
-export default connect(mapStateToProps)(MyTransactions);
+export default MyTransactions;

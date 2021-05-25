@@ -10,7 +10,6 @@ const updateOrdersWithPending = (orders, id) => {
 }
 
 export const orderReducer = (state = {}, action) => {
-		let myEventPending;
 	switch (action.type) {
 		case 'GET_CANCELLED_ORDERS':
 			return { ...state, cancelledOrders: { loaded: true, data: action.payload }};

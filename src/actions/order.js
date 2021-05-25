@@ -1,4 +1,4 @@
-import { BUY, SELL, ETHER_ADDRESS, toWei } from '../helpers';
+import { BUY, ETHER_ADDRESS, toWei } from '../helpers';
 
 export const showFillOrderModal = (formValues) => {
 	return {

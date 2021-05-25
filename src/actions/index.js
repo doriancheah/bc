@@ -12,6 +12,7 @@ export const loadBlockchainData = () => dispatch => {
 export const loadWeb3 = () => dispatch => {
 	//const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
 	const web3 = new Web3(window.ethereum);
+	console.log(web3);
 	dispatch({
 		type: 'LOAD_WEB3',
 		payload: web3
@@ -20,6 +21,7 @@ export const loadWeb3 = () => dispatch => {
 
 export const loadAccount = () => async (dispatch, getState) => {
 	const [ account ] = await getState().web3.connection.eth.getAccounts();
+	console.log(account);
 	dispatch({
 		type: 'LOAD_ACCOUNT',
 		payload: account

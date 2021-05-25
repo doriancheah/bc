@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import { get } from 'lodash';
 import { lastTradeSelector, balancesSelector } from '../selectors';
 import { showNewOrderModal, hideNewOrderModal } from '../actions/order';
 import NewOrderModal from './NewOrderModal';
