@@ -44,10 +44,13 @@ export const depositToken = amount => (dispatch, getState) => {
 			exchange.methods.depositToken(token.options.address, toWei(amount))
 				.send({ from: account })
 				.on('transactionHash', hash => {
+					// after contract call and before subscribe...
+					dispatch({ type: 'TRANSFER_PENDING'})
 					exchange.once('Deposit', {
 						filter: { user: account }
 					}, (error, event) => {
 						dispatch(getBalances());
+						dispatch({ type: 'TRANSFER_COMPLETE'})
 					})
 				})
 				.on('error', error => handleError(error, 'REVERT_TRANSFER', dispatch));	

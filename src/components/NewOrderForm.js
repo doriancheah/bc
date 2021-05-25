@@ -5,7 +5,7 @@ import { get } from 'lodash';
 import { lastTradeSelector, balancesSelector } from '../selectors';
 import { showNewOrderModal, hideNewOrderModal } from '../actions/order';
 import NewOrderModal from './NewOrderModal';
-import Spinner from './Spinner';
+import NewOrderPending from './NewOrderPending';
 import { BUY, SELL, withPrecision } from '../helpers';
 
 class NewOrderForm extends Component {
@@ -64,7 +64,7 @@ class NewOrderForm extends Component {
 
 	render() {
 		if(this.props.makingOrder) {
-			return <Spinner />;
+			return <NewOrderPending />;
 		}
 		return (
 			<React.Fragment>

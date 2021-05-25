@@ -1,9 +1,7 @@
 import React from 'react';
-
-
 import { connect } from 'react-redux';
-import { filledOrdersLoaded } from '../selectors';
 
+import { filledOrdersLoaded } from '../selectors';
 import NewOrderForm from './NewOrderForm';
 import Spinner from './Spinner';
 

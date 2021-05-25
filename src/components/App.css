@@ -191,15 +191,31 @@ tr.order-book-order {
 }
 
 .animate-update {
-  animation: Color 5s linear;
+  animation: Color-once 5s linear;
 }
 
-@keyframes Color{
+.animate-pending {
+  animation: Color-cycle 3s infinite;
+}
+
+@keyframes Color-once{
   0%{
     color: #28a745;
   }
   100%{
     color: white;
+  }
+}
+
+@keyframes Color-cycle{
+  0%{
+    color: #28a745;
+  }
+  50%{
+    color: white;
+  }
+  100%{
+    color: #28a745;
   }
 }
 

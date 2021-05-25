@@ -7,14 +7,6 @@ require('chai')
 	.use(require('chai-as-promised'))
 	.should()
 
-/*const eventShould = (log, eventType, props) => {
-	log.event.should.equal(eventType, `event type is ${eventType}`)
-	Object.keys(props).map((key) => {
-		log.args[key].toString().should.equal(props[key].toString(), `${key} is invalid`)
-		console.log(log.args[key].toString(), props[key].toString(), `${key} is invalid`)
-	})
-}*/
-
 contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
 	let token, exchange
 	const feePercent = 10

@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { balancesSelector } from '../selectors';
 import TransferButton from './TransferButton';
+import TransferPending from './TransferPending';
 
 const BalancesTable = (props) => {
 
@@ -41,39 +42,44 @@ const BalancesTable = (props) => {
 	}
 
 	return (
-		<table className="table table-dark table-sm small">
-			<thead>
-				<tr>
-					<th>Asset</th>
-					<th>Wallet</th>
-					<th></th>
-					<th></th>
-					<th>Exchange</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>ETH</td>
-					<td ref={walletEtherEl}>{walletEtherBal}</td>
-					<TransferButton type="withdraw" token="ETH" disabled={ isZero(exchangeEtherBal) } />
-					<TransferButton type="deposit" token="ETH" disabled={ isZero(walletEtherBal) } />
-					<td ref={exchangeEtherEl}>{ exchangeEtherBal }</td>
-				</tr>
-				<tr>
-					<td>DORY</td>
-					<td ref={walletTokenEl}>{ walletTokenBal }</td>
-					<TransferButton type="withdraw" token="DORY" disabled={ isZero(exchangeTokenBal) } />
-					<TransferButton type="deposit" token="DORY" disabled={ isZero(walletTokenBal) } />
-					<td ref={exchangeTokenEl}>{ exchangeTokenBal }</td>
-				</tr>
-			</tbody>
-		</table>			
+		<React.Fragment>
+			<table className="table table-dark table-sm small">
+				<thead>
+					<tr>
+						<th>Asset</th>
+						<th>Wallet</th>
+						<th></th>
+						<th></th>
+						<th>Exchange</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>ETH</td>
+						<td ref={walletEtherEl}>{walletEtherBal}</td>
+						<TransferButton type="withdraw" token="ETH" disabled={ isZero(exchangeEtherBal) } />
+						<TransferButton type="deposit" token="ETH" disabled={ isZero(walletEtherBal) } />
+						<td ref={exchangeEtherEl}>{ exchangeEtherBal }</td>
+					</tr>
+					<tr>
+						<td>DORY</td>
+						<td ref={walletTokenEl}>{ walletTokenBal }</td>
+						<TransferButton type="withdraw" token="DORY" disabled={ isZero(exchangeTokenBal) } />
+						<TransferButton type="deposit" token="DORY" disabled={ isZero(walletTokenBal) } />
+						<td ref={exchangeTokenEl}>{ exchangeTokenBal }</td>
+					</tr>
+				</tbody>
+			</table>
+			{ props.transferPending ? <TransferPending /> : null }				
+		</React.Fragment>
+	
 	);	
 }
 
 const mapStateToProps = (state) => {
 	return {
 		balances: balancesSelector(state),
+		transferPending: state.balances.transferPending
 	};
 }
 

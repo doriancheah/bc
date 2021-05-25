@@ -31,6 +31,10 @@ const balanceReducer = (state = {}, action) => {
 			return { ...state, loaded: false };
 		case 'GET_BALANCES':
 			return { ...state, ...action.payload };
+		case 'TRANSFER_PENDING':
+			return { ...state, transferPending: true };
+		case 'TRANSFER_COMPLETE':
+			return { ...state, transferPending: false };
 		default:
 			return state;
 	}
