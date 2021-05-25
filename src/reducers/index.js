@@ -5,9 +5,10 @@ import { reducer as formReducer } from 'redux-form';
 
 const web3Reducer = (state = {}, action) => {
 	switch (action.type) {
-		case 'LOAD_WEB3':
+		case 'SET_WEB3':
 			return { ...state, connection: action.payload };
-		case 'LOAD_ACCOUNT':
+		case 'SET_ACCOUNT':
+			console.log(action.payload);
 			return { ...state, account: action.payload };
 		default:
 			return state;		
@@ -16,9 +17,9 @@ const web3Reducer = (state = {}, action) => {
 
 const contractReducer = (state = {}, action) => {
 	switch (action.type) {
-		case 'LOAD_TOKEN':
+		case 'SET_TOKEN':
 			return { ...state, token: action.payload, tokenLoaded: true };
-		case 'LOAD_EXCHANGE':
+		case 'SET_EXCHANGE':
 			return { ...state, exchange: action.payload, exchangeLoaded: true };
 		default:
 			return state;		

@@ -5,12 +5,11 @@ import './App.css';
 import Navbar from './Navbar';
 import Content from './Content';
 import NoContent from './NoContent';    
-import { loadWeb3, loadBlockchainData } from '../actions';
+import { loadBlockchainData } from '../actions';
 import { contractsLoadedSelector } from '../selectors';
 
 class App extends Component {
   componentDidMount() {
-    this.props.loadWeb3();
     this.props.loadBlockchainData();
   }
 
@@ -20,7 +19,7 @@ class App extends Component {
         <Navbar />
         { this.props.contractsLoaded && this.props.account ? 
           <Content /> : 
-          <NoContent loadBlockchainData={this.props.loadBlockchainData} />
+          <NoContent />
         }
       </div>
     );    
@@ -34,5 +33,5 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { loadWeb3, loadBlockchainData })(App);
+export default connect(mapStateToProps, { loadBlockchainData })(App);
 
