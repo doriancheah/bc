@@ -85,17 +85,14 @@ contract Exchange {
 
 	}
 
-	function depositToken(address _token, uint256 _amount) public {
-		require(_token != ETHER);		// TODO: write test to see if this is necessary.
+	function depositToken(address _token, uint256 _amount) public onlyTokens {
 		require(Token(_token).transferFrom(msg.sender, address(this), _amount));
 
 		tokens[_token][msg.sender] = tokens[_token][msg.sender].add(_amount);
 		emit Deposit(_token, msg.sender, _amount, tokens[_token][msg.sender]);
 	}
 
-	function withdrawToken(address _token, uint256 _amount) public {
-		require(_token != ETHER);
-		//require(tokens[_token][msg.sender] >= _amount);		// SafeMath makes this unnecessary
+	function withdrawToken(address _token, uint256 _amount) public onlyTokens {
 		tokens[_token][msg.sender] = tokens[_token][msg.sender].sub(_amount);
 		Token(_token).transfer(msg.sender, _amount);
 		emit Withdrawal(_token, msg.sender, _amount, tokens[_token][msg.sender]);
@@ -125,14 +122,10 @@ contract Exchange {
 		require(_id > 0 && _id <= orderCount);
 		require(!orderFilled[_id], 'Order already filled.');
 		require(!orderCancelled[_id], 'Order already cancelled.');
-		// TODO: make sure both users have sufficient balances (NOPE, using SafeMath makes this unneccesary)
 
 		_Order storage _order = orders[_id];
 		_trade(_order.id, _order.user, _order.tokenGet, _order.amountGet, _order.tokenGive, _order.amountGive);
 		orderFilled[_order.id] = true;
-
-		// fetch the order
-		// mark order as filled
 	}
 
 	function _trade(uint256 _orderId, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) internal {
@@ -151,27 +144,13 @@ contract Exchange {
 		tokens[_tokenGive][msg.sender] = tokens[_tokenGive][msg.sender].add(_amountGive);
 
 		emit Trade(_orderId, _user, _tokenGet, _amountGet, _tokenGive, _amountGive, msg.sender, now);
-		
+	}
 
-
-		// emit Trade event
+	modifier onlyTokens {
+		require(_token != ETHER);
+		_;
 	}
 }
 
-// deposit and withdraw funds
-// manage orders - make and cancel
-// handle trades - charge fees
 
-/*
-[X] set the fee account
-[X] deposit ether
-[X] withdraw ether
-[X] deposit tokens
-[X] withdraw tokens
-[X] chack balances
-[X] make order
-[ ] cancel order
-[ ] fill order
-[ ] charge fees
-*/
 
