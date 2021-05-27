@@ -19,7 +19,7 @@ const NoContent = ({ web3, account, contractsLoaded }) => {
 	return (
     <div className="content">
       <div className="no-contract" ref={messageRef}>
-      	<div className="">Loading web3... { web3 ? 'OK' : 'PLEASE INSTALL METAMASK' }</div>
+      	<div className="">Loading web3...? { web3 ? 'OK' : 'PLEASE INSTALL METAMASK' }</div>
       	<div className="">Loading account... { account ? 'OK' : 'PLEASE AUTHORIZE METAMASK TO CONNECT' }</div>
       	<div className="">Loading smart contracts... { contractsLoaded ? 'OK' : 'PLEASE CHOOSE A VALID NETWORK' }</div>
       </div>
