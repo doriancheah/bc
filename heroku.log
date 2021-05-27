@@ -1,0 +1,17 @@
+
+2021-05-26T14:57:27.337183+00:00 heroku[web.1]: State changed from crashed to starting
+2021-05-26T14:57:50.603208+00:00 heroku[web.1]: Starting process with command `npm start`
+2021-05-26T14:57:54.283017+00:00 app[web.1]: 
+2021-05-26T14:57:54.283175+00:00 app[web.1]: > bootcamp@0.2.0 start /app
+2021-05-26T14:57:54.283176+00:00 app[web.1]: > react-scripts start
+2021-05-26T14:57:54.283176+00:00 app[web.1]: 
+2021-05-26T14:57:59.661616+00:00 app[web.1]: [34mℹ[39m [90m｢wds｣[39m: Project is running at http://172.16.46.22/
+2021-05-26T14:57:59.662207+00:00 app[web.1]: [34mℹ[39m [90m｢wds｣[39m: webpack output is served from
+2021-05-26T14:57:59.662394+00:00 app[web.1]: [34mℹ[39m [90m｢wds｣[39m: Content not from webpack is served from /app/public
+2021-05-26T14:57:59.662538+00:00 app[web.1]: [34mℹ[39m [90m｢wds｣[39m: 404s will fallback to /
+2021-05-26T14:57:59.662934+00:00 app[web.1]: Starting the development server...
+2021-05-26T14:57:59.662935+00:00 app[web.1]: 
+2021-05-26T14:57:59.800482+00:00 heroku[web.1]: Process exited with status 0
+2021-05-26T14:57:59.929038+00:00 heroku[web.1]: State changed from starting to crashed
+2021-05-26T15:06:51.308832+00:00 heroku[router]: at=error code=H10 desc="App crashed" method=GET path="/" host=dory-x.herokuapp.com request_id=dc9a7c80-c778-4b2f-afb5-a5889fcb8ff2 fwd="172.91.140.6" dyno= connect= service= status=503 bytes= protocol=https
+2021-05-26T15:06:51.962307+00:00 heroku[router]: at=error code=H10 desc="App crashed" method=GET path="/favicon.ico" host=dory-x.herokuapp.com request_id=252118c1-e5ac-443c-b112-6acf93bb9ce1 fwd="172.91.140.6" dyno= connect= service= status=503 bytes= protocol=https
